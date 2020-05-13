@@ -1,2 +1,7 @@
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninjaserver/ChatServer.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/Entity/GroupScoketPlayer.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/Entity/BoardGame.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninjaserver/ChatClient.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/Entity/SocketPlayer.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/Entity/Utils.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninjaserver/SocketGameServer.java
