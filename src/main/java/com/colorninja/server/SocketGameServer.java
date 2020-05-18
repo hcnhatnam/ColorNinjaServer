@@ -11,7 +11,9 @@ import com.colorninja.buissiness.IOSocket;
 import com.colorninja.buissiness.InGame;
 import com.colorninja.objectingame.BaseInPacket;
 import com.colorninja.objectingame.KeyPlayerPacket;
+import com.colorninja.objectingame.OutBoardInfoPacket;
 import com.colorninja.objectingame.OutNewBoardPacket;
+import com.colorninja.objectingame.OutNewBoardPacket.PREVIOUS_STATE;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,9 +113,14 @@ public class SocketGameServer {
                                     keyPlayer_GroupId.put(avalPlayer.getKey(), groupScoketPlayer.getIdGroup());
                                     keyPlayer_GroupId.put(socketPlayer.getKey(), groupScoketPlayer.getIdGroup());
                                     groupScoketPlayers.put(groupScoketPlayer.getIdGroup(), groupScoketPlayer);
-                                    List<String> userNames = Arrays.asList(socketPlayer.getUserName(), avalPlayer.getUserName());
-                                    IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), new OutNewBoardPacket(1, userNames));
-
+                                    Map<String, String> key_usernames = new HashMap<>();
+                                    key_usernames.put(socketPlayer.getKey(), socketPlayer.getUserName());
+                                    key_usernames.put(avalPlayer.getKey(), avalPlayer.getUserName());
+                                    LOGGER.info("key_usernames" + key_usernames);
+                                    OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupScoketPlayer.getIdGroup(), key_usernames);
+                                    IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), outBoardInfoPacket);
+                                    Map<OutNewBoardPacket.PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(1);
+                                    IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), mOut.get(PREVIOUS_STATE.WIN));
                                 } else {
                                     availablePlayer.add(socketPlayer);
                                     IOSocket.send(socketPlayer, OutPacket.WAITING_PLAYER);

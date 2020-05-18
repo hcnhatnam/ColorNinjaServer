@@ -6,7 +6,9 @@
 package com.colorninja.objectingame;
 
 import com.colorninja.Entity.BoardGame;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,22 +23,29 @@ public class OutNewBoardPacket extends BaseOutPacket {
     public static int TYPE_NEW_BOARD = 5;
 
     protected BoardGame boardGame;
-    protected List<String> userNames;
-    protected boolean isPreviosWinner;
+    protected boolean isPreviousWinner;
 
-    public OutNewBoardPacket(int round) {
+    private OutNewBoardPacket(BoardGame boardGame) {
         super(TYPE_NEW_BOARD);
-        this.boardGame = new BoardGame(round);
+        this.boardGame = boardGame;
     }
 
-    public static OutNewBoardPacket getOutNewBoardPacket(int round, boolean isPreviosWinner) {
-        OutNewBoardPacket outNewBoardPacket = new OutNewBoardPacket(round);
-        outNewBoardPacket.isPreviosWinner = isPreviosWinner;
-        return outNewBoardPacket;
+    private OutNewBoardPacket(BoardGame boardGame, boolean isPreviosWinner) {
+        this(boardGame);
+        this.isPreviousWinner = isPreviosWinner;
     }
 
-    public OutNewBoardPacket(int round, List<String> userNames) {
-        this(round);
-        this.userNames = userNames;
+    public enum PREVIOUS_STATE {
+        WIN, LOOSE;
+    }
+
+    public static Map<PREVIOUS_STATE, OutNewBoardPacket> getInstances(int round) {
+        Map<PREVIOUS_STATE, OutNewBoardPacket> mRet = new HashMap<>();
+        BoardGame boardGame = new BoardGame(round);
+        OutNewBoardPacket win = new OutNewBoardPacket(boardGame, true);
+        OutNewBoardPacket loose = new OutNewBoardPacket(boardGame, false);
+        mRet.put(PREVIOUS_STATE.WIN, win);
+        mRet.put(PREVIOUS_STATE.LOOSE, loose);
+        return mRet;
     }
 }

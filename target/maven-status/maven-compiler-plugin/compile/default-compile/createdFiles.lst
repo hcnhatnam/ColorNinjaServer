@@ -5,6 +5,7 @@ com/colorninja/Entity/TypeInput.class
 com/colorninja/buissiness/IOSocket.class
 com/colorninja/Entity/GroupScoketPlayer.class
 com/colorninja/Entity/TypeReturn.class
+com/colorninja/objectingame/OutBoardInfoPacket.class
 com/colorninja/objectingame/BaseInPacket.class
 com/colorninja/server/SocketGameClient$2.class
 com/colorninja/Entity/SocketPlayer.class
@@ -12,6 +13,7 @@ com/colorninja/Entity/Utils.class
 com/colorninja/objectingame/OutWinGamePacket$ScorePlayer.class
 com/colorninja/Entity/BoardGame.class
 com/colorninja/Entity/OutPacket.class
+com/colorninja/objectingame/OutNewBoardPacket$PREVIOUS_STATE.class
 com/colorninja/objectingame/InGamePacket.class
 com/colorninja/Entity/ResultObject.class
 com/colorninja/objectingame/KeyPlayerPacket.class

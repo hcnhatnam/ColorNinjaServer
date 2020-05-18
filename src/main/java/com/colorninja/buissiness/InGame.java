@@ -5,6 +5,7 @@
  */
 package com.colorninja.buissiness;
 
+import com.colorninja.Entity.BoardGame;
 import com.colorninja.Entity.GroupScoketPlayer;
 import com.colorninja.Entity.OutPacket;
 import com.colorninja.Entity.ResultObject;
@@ -17,6 +18,7 @@ import com.colorninja.objectingame.BaseOutPacket;
 import com.colorninja.objectingame.InGamePacket;
 import com.colorninja.objectingame.KeyPlayerPacket;
 import com.colorninja.objectingame.OutNewBoardPacket;
+import com.colorninja.objectingame.OutNewBoardPacket.PREVIOUS_STATE;
 import com.colorninja.objectingame.OutWinGamePacket;
 import com.colorninja.objectingame.OutWinGamePacket.ScorePlayer;
 import com.colorninja.server.SocketGameServer;
@@ -61,31 +63,31 @@ public class InGame {
                     winGame(mSo);
                 } else if (currentRount < MAX_WIN_NUMROUND) {
                     int nextRound = setNewRound(groupScoketPlayer);
-                    Map<String, BaseOutPacket> baseOutPackets = new HashMap<>();
-                    for (Map.Entry<String, SocketPlayer> entry : mSo.entrySet()) {
-                        String key = entry.getKey();
-                        SocketPlayer val = entry.getValue();
-                        if (key.equals(curentPlayer.getKey())) {
-                            val.setScore(val.getScore() + 1);
-                            baseOutPackets.put(key, OutNewBoardPacket.getOutNewBoardPacket(nextRound, true));
-                        } else {
-                            baseOutPackets.put(key, OutNewBoardPacket.getOutNewBoardPacket(nextRound, false));
-                        }
-                    }
+                    Map<PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(nextRound);
+                    Map<String, BaseOutPacket> baseOutPackets = genMapWinOutputBroacast(keyPlayer, mSo, mOut.get(PREVIOUS_STATE.WIN), mOut.get(PREVIOUS_STATE.LOOSE));
                     IOSocket.broadcast(mSo.values(), baseOutPackets);
                 } else {
                     IOSocket.send(curentPlayer, OutPacket.ROUND_EXCEED);
                 }
             } else if (packet.getEType() == BaseInPacket.EInType.LOOSE) {
+                InGamePacket inGamePacket = (InGamePacket) packet;
+                if (inGamePacket.getRound() != groupScoketPlayer.getRound()) {
+                    IOSocket.send(curentPlayer, OutPacket.ROUND_EXPIRED);
+                    return;
+                }
                 int nextRound = setNewRound(groupScoketPlayer);
                 Map<String, BaseOutPacket> baseOutPackets = new HashMap<>();
+                Map<PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(nextRound);
                 for (Map.Entry<String, SocketPlayer> entry : mSo.entrySet()) {
                     String key = entry.getKey();
                     SocketPlayer val = entry.getValue();
                     if (!key.equals(curentPlayer.getKey())) {
                         val.setScore(val.getScore() + 1);
-                        baseOutPackets.put(key, OutNewBoardPacket.getOutNewBoardPacket(nextRound, true));
+                        baseOutPackets.put(key, mOut.get(PREVIOUS_STATE.WIN));
+                    } else {
+                        baseOutPackets.put(key, mOut.get(PREVIOUS_STATE.LOOSE));
                     }
+
                 }
                 IOSocket.broadcast(mSo.values(), baseOutPackets);
             } else if (packet.getEType() == BaseInPacket.EInType.STOP_ROUND) {
@@ -94,6 +96,22 @@ public class InGame {
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
+    }
+
+    public Map<String, BaseOutPacket> genMapWinOutputBroacast(String keyWin, Map<String, SocketPlayer> mSo, OutNewBoardPacket winOuput, OutNewBoardPacket looseOuput) {
+        Map<String, BaseOutPacket> baseOutPackets = new HashMap<>();
+
+        for (Map.Entry<String, SocketPlayer> entry : mSo.entrySet()) {
+            String key = entry.getKey();
+            SocketPlayer val = entry.getValue();
+            if (key.equals(keyWin)) {
+                val.setScore(val.getScore() + 1);
+                baseOutPackets.put(key, winOuput);
+            } else {
+                baseOutPackets.put(key, looseOuput);
+            }
+        }
+        return baseOutPackets;
     }
 
     public int setNewRound(GroupScoketPlayer groupScoketPlayer) {

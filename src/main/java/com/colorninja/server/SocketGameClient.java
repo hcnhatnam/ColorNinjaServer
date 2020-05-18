@@ -58,6 +58,8 @@ public class SocketGameClient {
                     JsonObject jo = new JsonObject();
                     jo.addProperty("type", 2);
                     jo.addProperty("keyPlayer", name);
+                    jo.addProperty("username", name + "username");
+
                     out.println(jo.toString());
 //                    if (name.contains("Nam")) {
 //                        out.close();

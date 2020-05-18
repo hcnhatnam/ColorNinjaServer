@@ -16,3 +16,4 @@
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/Entity/ResultObject.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/Entity/BoardGame.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/Entity/OutPacket.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/objectingame/OutBoardInfoPacket.java
