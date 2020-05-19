@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.Entity;
+package com.colorninja.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +16,7 @@ import lombok.Setter;
 @Setter
 public class BoardGame {
 
+    private static final int DELTA_COLOR_RANGE = 3;
     private int round;
     private int color;
     private int sizeBoard;
@@ -28,6 +28,6 @@ public class BoardGame {
         this.color = Utils.getRandomColor();
         this.sizeBoard = Utils.MAX_POINT_IN_ROUND.get(round - 1);
         this.index = Utils.getRandom(sizeBoard * sizeBoard);
-        this.secondColor= Utils.getRandom(2);
+        this.secondColor = Utils.getRandom(DELTA_COLOR_RANGE);
     }
 }

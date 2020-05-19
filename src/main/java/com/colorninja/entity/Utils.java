@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.Entity;
+package com.colorninja.entity;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -20,8 +20,6 @@ public class Utils {
     public static Random _randomColor = new Random();
     public static int MAX_COLOR = 20;
     public static List<Integer> MAX_POINT_IN_ROUND = new ArrayList<>();
-//    1->5=2x2;
-//        1->5=2x2;
 
     static {
         for (int i = 1; i <= 5 * 6; i += 5) {

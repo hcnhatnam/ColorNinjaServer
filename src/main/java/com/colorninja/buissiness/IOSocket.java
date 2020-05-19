@@ -5,8 +5,8 @@
  */
 package com.colorninja.buissiness;
 
-import com.colorninja.Entity.SocketPlayer;
-import com.colorninja.Entity.Utils;
+import com.colorninja.entity.SocketPlayer;
+import com.colorninja.entity.Utils;
 import com.colorninja.objectingame.BaseInPacket;
 import com.colorninja.objectingame.BaseOutPacket;
 import com.colorninja.objectingame.InGamePacket;

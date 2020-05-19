@@ -5,14 +5,14 @@
  */
 package com.colorninja.buissiness;
 
-import com.colorninja.Entity.BoardGame;
-import com.colorninja.Entity.GroupScoketPlayer;
-import com.colorninja.Entity.OutPacket;
-import com.colorninja.Entity.ResultObject;
-import com.colorninja.Entity.SocketPlayer;
-import com.colorninja.Entity.TypeInput;
-import com.colorninja.Entity.TypeReturn;
-import com.colorninja.Entity.Utils;
+import com.colorninja.entity.BoardGame;
+import com.colorninja.entity.GroupScoketPlayer;
+import com.colorninja.entity.OutPacket;
+import com.colorninja.entity.ResultObject;
+import com.colorninja.entity.SocketPlayer;
+import com.colorninja.entity.TypeInput;
+import com.colorninja.entity.TypeReturn;
+import com.colorninja.entity.Utils;
 import com.colorninja.objectingame.BaseInPacket;
 import com.colorninja.objectingame.BaseOutPacket;
 import com.colorninja.objectingame.InGamePacket;
@@ -37,7 +37,7 @@ import org.apache.log4j.Logger;
 public class InGame {
 
     private static final Logger LOGGER = Logger.getLogger(SocketGameServer.class);
-    private static final int MAX_WIN_NUMROUND = 30;
+    private static final int MAX_WIN_NUMROUND = 100;
     public static InGame INSTANCE = new InGame();
 
     /**

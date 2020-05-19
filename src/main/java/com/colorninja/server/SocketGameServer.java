@@ -1,12 +1,12 @@
 package com.colorninja.server;
 
-import com.colorninja.Entity.GroupScoketPlayer;
-import com.colorninja.Entity.OutPacket;
-import com.colorninja.Entity.ResultObject;
-import com.colorninja.Entity.SocketPlayer;
-import com.colorninja.Entity.TypeInput;
-import com.colorninja.Entity.TypeReturn;
-import com.colorninja.Entity.Utils;
+import com.colorninja.entity.GroupScoketPlayer;
+import com.colorninja.entity.OutPacket;
+import com.colorninja.entity.ResultObject;
+import com.colorninja.entity.SocketPlayer;
+import com.colorninja.entity.TypeInput;
+import com.colorninja.entity.TypeReturn;
+import com.colorninja.entity.Utils;
 import com.colorninja.buissiness.IOSocket;
 import com.colorninja.buissiness.InGame;
 import com.colorninja.objectingame.BaseInPacket;
@@ -91,11 +91,9 @@ public class SocketGameServer {
 
                 while (true) {
                     IOSocket.send(out, OutPacket.REQUIRE_KEY);
-//                    Thread.sleep(500);
                     Optional<BaseInPacket> opKequireKey = IOSocket.reciver(in);
                     if (opKequireKey.isPresent()) {
                         BaseInPacket baseInPacket = opKequireKey.get();
-                        LOGGER.info("======" + baseInPacket.toString());
                         if (baseInPacket.getEType() == BaseInPacket.EInType.GET_KEY) {
                             KeyPlayerPacket keyPlayerPacket = (KeyPlayerPacket) baseInPacket;
                             String key = keyPlayerPacket.getKeyPlayer();
@@ -116,7 +114,6 @@ public class SocketGameServer {
                                     Map<String, String> key_usernames = new HashMap<>();
                                     key_usernames.put(socketPlayer.getKey(), socketPlayer.getUserName());
                                     key_usernames.put(avalPlayer.getKey(), avalPlayer.getUserName());
-                                    LOGGER.info("key_usernames" + key_usernames);
                                     OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupScoketPlayer.getIdGroup(), key_usernames);
                                     IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), outBoardInfoPacket);
                                     Map<OutNewBoardPacket.PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(1);
@@ -181,14 +178,9 @@ public class SocketGameServer {
                     LOGGER.error(ex.getMessage(), ex);
                 }
                 LOGGER.info("availablePlayer" + availablePlayer.toString());
-
                 if (availablePlayer.contains(socketPlayer)) {
-                    LOGGER.info("availablePlayer3" + availablePlayer.toString());
-
                     availablePlayer.remove(socketPlayer);
                 }
-                LOGGER.info("availablePlayer2" + availablePlayer.toString());
-
                 LOGGER.info("Close connect of User: " + keyPlayer);
             }
 

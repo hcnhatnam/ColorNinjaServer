@@ -5,7 +5,7 @@
  */
 package com.colorninja.objectingame;
 
-import com.colorninja.Entity.BoardGame;
+import com.colorninja.entity.BoardGame;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

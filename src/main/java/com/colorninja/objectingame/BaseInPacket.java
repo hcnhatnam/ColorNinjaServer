@@ -5,7 +5,7 @@
  */
 package com.colorninja.objectingame;
 
-import com.colorninja.Entity.Utils;
+import com.colorninja.entity.Utils;
 import com.google.gson.JsonObject;
 import java.io.Serializable;
 import lombok.AllArgsConstructor;
