@@ -7,10 +7,12 @@ package com.colorninja.buissiness;
 
 import com.colorninja.entity.SocketPlayer;
 import com.colorninja.entity.Utils;
-import com.colorninja.objectingame.BaseInPacket;
-import com.colorninja.objectingame.BaseOutPacket;
-import com.colorninja.objectingame.InGamePacket;
-import com.colorninja.objectingame.KeyPlayerPacket;
+import com.colorninja.input.BaseInPacket;
+import com.colorninja.buissiness.output.BaseOutPacket;
+import com.colorninja.input.InGamePacket;
+import com.colorninja.input.KeyPlayerGroupModePacket;
+import com.colorninja.input.KeyPlayerPacket;
+import com.colorninja.buissiness.output.WaitingPlayerGroupModePacket;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.List;
@@ -58,8 +60,10 @@ public class IOSocket {
             BaseInPacket object = Utils.gson.fromJson(json, BaseInPacket.class);
             if (object.getEType() == BaseInPacket.EInType.GET_KEY) {
                 object = Utils.gson.fromJson(json, KeyPlayerPacket.class);
-            } else if (object.getEType() == BaseInPacket.EInType.WIN) {
+            } else if (object.getEType() == BaseInPacket.EInType.WIN || object.getEType() == BaseInPacket.EInType.LOOSE) {
                 object = Utils.gson.fromJson(json, InGamePacket.class);
+            } else if (object.getEType() == BaseInPacket.EInType.GET_KEY_GROUP_MODE) {
+                object = Utils.gson.fromJson(json, KeyPlayerGroupModePacket.class);
             }
             LOGGER.info(String.format("reciverFromUnknowUser: %s", Utils.gson.toJson(object)));
             return Optional.ofNullable(object);

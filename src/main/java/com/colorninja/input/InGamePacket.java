@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.objectingame;
+package com.colorninja.input;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +14,12 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class KeyPlayerPacket extends BaseInPacket {
+public class InGamePacket extends BaseInPacket {
 
-    protected String keyPlayer;
-    protected String username;
+    protected int round;
 
-    public KeyPlayerPacket(String keyPlayer) {
-        super(EInType.GET_KEY);
-        this.keyPlayer = keyPlayer;
+    public InGamePacket(int round) {
+        super(BaseInPacket.EInType.WIN);
+        this.round = round;
     }
 }

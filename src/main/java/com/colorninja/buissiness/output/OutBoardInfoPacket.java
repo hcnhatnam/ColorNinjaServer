@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.objectingame;
+package com.colorninja.buissiness.output;
 
 
+import com.colorninja.buissiness.output.BaseOutPacket;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,6 @@ import lombok.Setter;
 @Setter
 public class OutBoardInfoPacket extends BaseOutPacket {
 
-    public static int TYPE_BOARD_INFO = 6;
 
     protected String idGroup;
     protected Map<String, String> key_usernames;

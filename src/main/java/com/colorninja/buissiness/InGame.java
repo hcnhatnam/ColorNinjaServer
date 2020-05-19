@@ -5,26 +5,19 @@
  */
 package com.colorninja.buissiness;
 
-import com.colorninja.entity.BoardGame;
 import com.colorninja.entity.GroupScoketPlayer;
-import com.colorninja.entity.OutPacket;
-import com.colorninja.entity.ResultObject;
+import com.colorninja.buissiness.output.BaseOutPacketInstance;
 import com.colorninja.entity.SocketPlayer;
-import com.colorninja.entity.TypeInput;
-import com.colorninja.entity.TypeReturn;
+import com.colorninja.input.BaseInPacket;
+import com.colorninja.buissiness.output.BaseOutPacket;
+import com.colorninja.input.InGamePacket;
+import com.colorninja.buissiness.output.OutNewBoardPacket;
+import com.colorninja.buissiness.output.OutNewBoardPacket.PREVIOUS_STATE;
+import com.colorninja.buissiness.output.OutWinGamePacket;
+import com.colorninja.buissiness.output.OutWinGamePacket.ScorePlayer;
 import com.colorninja.entity.Utils;
-import com.colorninja.objectingame.BaseInPacket;
-import com.colorninja.objectingame.BaseOutPacket;
-import com.colorninja.objectingame.InGamePacket;
-import com.colorninja.objectingame.KeyPlayerPacket;
-import com.colorninja.objectingame.OutNewBoardPacket;
-import com.colorninja.objectingame.OutNewBoardPacket.PREVIOUS_STATE;
-import com.colorninja.objectingame.OutWinGamePacket;
-import com.colorninja.objectingame.OutWinGamePacket.ScorePlayer;
 import com.colorninja.server.SocketGameServer;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,17 +42,24 @@ public class InGame {
      */
     public void process(BaseInPacket packet, GroupScoketPlayer groupScoketPlayer, String keyPlayer) {
         try {
+            String log = "";
+            for (Map.Entry<String, SocketPlayer> entry : groupScoketPlayer.getSocketPlayers().entrySet()) {
+                SocketPlayer socketPlayer = entry.getValue();
+                log += String.format("%s_%s", socketPlayer.getUserName(), socketPlayer.getScore());
+            }
+            LOGGER.info(String.format("%s_%s", groupScoketPlayer.getIdGroup(), log));
+
             Map<String, SocketPlayer> mSo = groupScoketPlayer.getSocketPlayers();
             SocketPlayer curentPlayer = mSo.get(keyPlayer);
             if (packet.getEType() == BaseInPacket.EInType.WIN) {
                 InGamePacket inGamePacket = (InGamePacket) packet;
                 if (inGamePacket.getRound() != groupScoketPlayer.getRound()) {
-                    IOSocket.send(curentPlayer, OutPacket.ROUND_EXPIRED);
+                    IOSocket.send(curentPlayer, BaseOutPacketInstance.ROUND_EXPIRED);
                     return;
                 }
-                curentPlayer.setScore(curentPlayer.getScore() + 1);
                 int currentRount = groupScoketPlayer.getRound();
                 if (currentRount == MAX_WIN_NUMROUND) {
+                    curentPlayer.setScore(curentPlayer.getScore() + 1);
                     winGame(mSo);
                 } else if (currentRount < MAX_WIN_NUMROUND) {
                     int nextRound = setNewRound(groupScoketPlayer);
@@ -67,12 +67,12 @@ public class InGame {
                     Map<String, BaseOutPacket> baseOutPackets = genMapWinOutputBroacast(keyPlayer, mSo, mOut.get(PREVIOUS_STATE.WIN), mOut.get(PREVIOUS_STATE.LOOSE));
                     IOSocket.broadcast(mSo.values(), baseOutPackets);
                 } else {
-                    IOSocket.send(curentPlayer, OutPacket.ROUND_EXCEED);
+                    IOSocket.send(curentPlayer, BaseOutPacketInstance.ROUND_EXCEED);
                 }
             } else if (packet.getEType() == BaseInPacket.EInType.LOOSE) {
                 InGamePacket inGamePacket = (InGamePacket) packet;
                 if (inGamePacket.getRound() != groupScoketPlayer.getRound()) {
-                    IOSocket.send(curentPlayer, OutPacket.ROUND_EXPIRED);
+                    IOSocket.send(curentPlayer, BaseOutPacketInstance.ROUND_EXPIRED);
                     return;
                 }
                 int nextRound = setNewRound(groupScoketPlayer);

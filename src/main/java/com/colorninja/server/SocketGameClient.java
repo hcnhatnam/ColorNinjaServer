@@ -5,7 +5,6 @@
  */
 package com.colorninja.server;
 
-import com.colorninja.entity.ResultObject;
 import com.colorninja.entity.Utils;
 import com.google.gson.JsonObject;
 import java.io.IOException;

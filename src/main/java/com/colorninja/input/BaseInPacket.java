@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.objectingame;
+package com.colorninja.input;
 
 import com.colorninja.entity.Utils;
 import com.google.gson.JsonObject;
@@ -21,7 +21,7 @@ import lombok.Setter;
 public class BaseInPacket implements Serializable {
 
     public enum EInType {
-        UNKKNOW, WIN, CLOSE, GET_KEY, LOOSE, STOP_ROUND;
+        UNKKNOW, WIN, CLOSE, GET_KEY, LOOSE, STOP_ROUND, GET_KEY_GROUP_MODE;
     }
 
     public static EInType get(String input) {
@@ -30,6 +30,8 @@ public class BaseInPacket implements Serializable {
         if (type.equals("win")) {
             return EInType.WIN;
         } else if (type.equals("get_key")) {
+            return EInType.GET_KEY;
+        } else if (type.equals("get_key_group_mode")) {
             return EInType.GET_KEY;
         } else if (type.equals("loose")) {
             return EInType.LOOSE;
@@ -60,6 +62,9 @@ public class BaseInPacket implements Serializable {
             case STOP_ROUND:
                 typeTmp = 4;
                 break;
+            case GET_KEY_GROUP_MODE:
+                typeTmp = 7;
+                break;
             case UNKKNOW:
                 typeTmp = -1;
                 break;
@@ -79,6 +84,8 @@ public class BaseInPacket implements Serializable {
                 return EInType.LOOSE;
             case 4:
                 return EInType.STOP_ROUND;
+            case 7:
+                return EInType.GET_KEY_GROUP_MODE;
             default:
                 return EInType.UNKKNOW;
         }

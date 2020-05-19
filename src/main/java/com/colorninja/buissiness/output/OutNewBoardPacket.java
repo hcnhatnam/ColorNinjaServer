@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.objectingame;
+package com.colorninja.buissiness.output;
 
+import com.colorninja.buissiness.output.BaseOutPacket;
 import com.colorninja.entity.BoardGame;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,6 @@ import lombok.Setter;
 @Setter
 public class OutNewBoardPacket extends BaseOutPacket {
 
-    public static int TYPE_NEW_BOARD = 5;
 
     protected BoardGame boardGame;
     protected boolean isPreviousWinner;

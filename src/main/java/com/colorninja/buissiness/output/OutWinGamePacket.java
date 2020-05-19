@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.colorninja.objectingame;
+package com.colorninja.buissiness.output;
 
+import com.colorninja.buissiness.output.BaseOutPacket;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OutWinGamePacket extends BaseOutPacket {
-
-    public static int TYPE_WINGAME = 4;
-
     @Getter
     @Setter
     @AllArgsConstructor

@@ -5,6 +5,7 @@
  */
 package com.colorninja.entity;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
@@ -31,6 +32,16 @@ public class GroupScoketPlayer {
         this.socketPlayers = new ConcurrentHashMap<>();
         this.socketPlayers.put(player1.getKey(), player1);
         this.socketPlayers.put(player2.getKey(), player2);
+        this.round = 1;
+    }
+
+    public GroupScoketPlayer(String idGroup, List<SocketPlayer> SocketPlayers) {
+        this.idGroup = idGroup;
+        this.socketPlayers = new ConcurrentHashMap<>();
+        for (SocketPlayer sk : SocketPlayers) {
+            this.socketPlayers.put(sk.getKey(), sk);
+        }
+
         this.round = 1;
     }
 

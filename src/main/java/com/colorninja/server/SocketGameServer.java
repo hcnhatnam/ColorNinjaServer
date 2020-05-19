@@ -1,30 +1,22 @@
 package com.colorninja.server;
 
 import com.colorninja.entity.GroupScoketPlayer;
-import com.colorninja.entity.OutPacket;
-import com.colorninja.entity.ResultObject;
+import com.colorninja.buissiness.output.BaseOutPacketInstance;
 import com.colorninja.entity.SocketPlayer;
-import com.colorninja.entity.TypeInput;
-import com.colorninja.entity.TypeReturn;
 import com.colorninja.entity.Utils;
 import com.colorninja.buissiness.IOSocket;
 import com.colorninja.buissiness.InGame;
-import com.colorninja.objectingame.BaseInPacket;
-import com.colorninja.objectingame.KeyPlayerPacket;
-import com.colorninja.objectingame.OutBoardInfoPacket;
-import com.colorninja.objectingame.OutNewBoardPacket;
-import com.colorninja.objectingame.OutNewBoardPacket.PREVIOUS_STATE;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.colorninja.input.BaseInPacket;
+import com.colorninja.input.KeyPlayerGroupModePacket;
+import com.colorninja.input.KeyPlayerPacket;
+import com.colorninja.buissiness.output.OutBoardInfoPacket;
+import com.colorninja.buissiness.output.OutNewBoardPacket;
+import com.colorninja.buissiness.output.OutNewBoardPacket.PREVIOUS_STATE;
+import com.colorninja.buissiness.output.WaitingPlayerGroupModePacket;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,23 +35,31 @@ public class SocketGameServer {
     private static final Logger LOGGER = Logger.getLogger(SocketGameServer.class);
 
     private static final List<SocketPlayer> availablePlayer = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<String, List<SocketPlayer>> availablePlayerGroupMode = new ConcurrentHashMap<>();
+
     private static final Map<String, GroupScoketPlayer> groupScoketPlayers = new ConcurrentHashMap<>();
     private static final Map<String, String> keyPlayer_GroupId = new ConcurrentHashMap<>();
 
     private static class Handler implements Runnable {
 
-        private String keyPlayer = "";
         private Socket socket;
-//        private Scanner in;
-//        private PrintWriter out;
         SocketPlayer socketPlayer;
 
         public Handler(Socket socket) {
             this.socket = socket;
         }
 
-        public void log(Object content) {
-            LOGGER.info(String.format("%s_%s_", keyPlayer, Utils.gson.toJson(content)));
+        enum ErrorKeyPlayer {
+            EXISTED, INVALID, VALID
+        }
+
+        ErrorKeyPlayer isValidKeyPlayer(KeyPlayerPacket keyPlayerPacket) {
+            String key = keyPlayerPacket.getKeyPlayer();
+            if (key == null || key.isEmpty()) {
+                return ErrorKeyPlayer.INVALID;
+            }
+
+            return isExistPlayer(key) ? ErrorKeyPlayer.EXISTED : ErrorKeyPlayer.VALID;
         }
 
         public boolean isExistPlayer(String key) {
@@ -80,6 +80,43 @@ public class SocketGameServer {
             return false;
         }
 
+        public void startGame(String groupId, List<SocketPlayer> socketPlayerInGroup) {
+            GroupScoketPlayer groupScoketPlayer = new GroupScoketPlayer(groupId, socketPlayerInGroup);
+            groupScoketPlayers.put(groupId, groupScoketPlayer);
+            Map<String, String> key_usernames = new HashMap<>();
+
+            for (SocketPlayer player : socketPlayerInGroup) {
+                key_usernames.put(player.getKey(), player.getUserName());
+                keyPlayer_GroupId.put(socketPlayer.getKey(), groupId);
+            }
+
+            OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupId, key_usernames);
+            IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), outBoardInfoPacket);
+            Map<OutNewBoardPacket.PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(1);
+            IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), mOut.get(PREVIOUS_STATE.WIN));
+
+        }
+
+        public boolean processKeyInputAndIsContinue(PrintWriter out, KeyPlayerPacket keyPlayerPacket) {
+            ErrorKeyPlayer errorKeyPlayer = isValidKeyPlayer(keyPlayerPacket);
+
+            if (null != errorKeyPlayer) {
+                switch (errorKeyPlayer) {
+                    case VALID:
+                        return true;
+                    case INVALID:
+                        IOSocket.send(out, BaseOutPacketInstance.ERROR_KEY);
+                        return false;
+                    case EXISTED:
+                        IOSocket.send(out, BaseOutPacketInstance.PLAYER_KEY_EXISTED);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return false;
+        }
+
         @Override
         public void run() {
             LOGGER.info("=====Start-Connect=====");
@@ -90,49 +127,58 @@ public class SocketGameServer {
                 in = new Scanner(socket.getInputStream());
 
                 while (true) {
-                    IOSocket.send(out, OutPacket.REQUIRE_KEY);
+                    IOSocket.send(out, BaseOutPacketInstance.REQUIRE_KEY);
                     Optional<BaseInPacket> opKequireKey = IOSocket.reciver(in);
                     if (opKequireKey.isPresent()) {
                         BaseInPacket baseInPacket = opKequireKey.get();
                         if (baseInPacket.getEType() == BaseInPacket.EInType.GET_KEY) {
                             KeyPlayerPacket keyPlayerPacket = (KeyPlayerPacket) baseInPacket;
-                            String key = keyPlayerPacket.getKeyPlayer();
-                            if (key == null || key.isEmpty()) {
-                                IOSocket.send(out, OutPacket.ERROR_KEY);
-                                return;
-                            }
-                            keyPlayer = key;
-                            if (!isExistPlayer(keyPlayer)) {
-                                socketPlayer = new SocketPlayer(keyPlayer, keyPlayerPacket.getUsername(), out, in, 0);
+                            if (processKeyInputAndIsContinue(out, keyPlayerPacket)) {
+                                socketPlayer = new SocketPlayer(keyPlayerPacket.getKeyPlayer(), keyPlayerPacket.getUsername(), out, in, 0);
                                 if (!availablePlayer.isEmpty()) {
                                     SocketPlayer avalPlayer = availablePlayer.get(availablePlayer.size() - 1);
+                                    String keyGroup = avalPlayer.getKey() + "_" + socketPlayer.getKey();
+                                    startGame(keyGroup, Arrays.asList(avalPlayer, socketPlayer));
                                     availablePlayer.remove(availablePlayer.size() - 1);
-                                    GroupScoketPlayer groupScoketPlayer = new GroupScoketPlayer(avalPlayer, socketPlayer);
-                                    keyPlayer_GroupId.put(avalPlayer.getKey(), groupScoketPlayer.getIdGroup());
-                                    keyPlayer_GroupId.put(socketPlayer.getKey(), groupScoketPlayer.getIdGroup());
-                                    groupScoketPlayers.put(groupScoketPlayer.getIdGroup(), groupScoketPlayer);
-                                    Map<String, String> key_usernames = new HashMap<>();
-                                    key_usernames.put(socketPlayer.getKey(), socketPlayer.getUserName());
-                                    key_usernames.put(avalPlayer.getKey(), avalPlayer.getUserName());
-                                    OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupScoketPlayer.getIdGroup(), key_usernames);
-                                    IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), outBoardInfoPacket);
-                                    Map<OutNewBoardPacket.PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(1);
-                                    IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), mOut.get(PREVIOUS_STATE.WIN));
+
                                 } else {
                                     availablePlayer.add(socketPlayer);
-                                    IOSocket.send(socketPlayer, OutPacket.WAITING_PLAYER);
+                                    IOSocket.send(socketPlayer, BaseOutPacketInstance.WAITING_PLAYER);
                                 }
                                 break;
-                            } else {
-                                IOSocket.send(out, OutPacket.PLAYER_KEY_EXISTED);
-                                return;
                             }
+                            return;
+
+                        } else if (baseInPacket.getEType() == BaseInPacket.EInType.GET_KEY_GROUP_MODE) {
+                            KeyPlayerGroupModePacket keyPlayerPacket = (KeyPlayerGroupModePacket) baseInPacket;
+                            if (processKeyInputAndIsContinue(out, keyPlayerPacket)) {
+                                socketPlayer = new SocketPlayer(keyPlayerPacket.getKeyPlayer(), keyPlayerPacket.getUsername(), out, in, 0);
+                                List<SocketPlayer> playerInGroup = availablePlayerGroupMode.get(keyPlayerPacket.getGroupId());
+                                String groupId = keyPlayerPacket.getGroupId();
+                                if (!groupId.isEmpty() && playerInGroup != null) {
+                                    playerInGroup.add(socketPlayer);
+                                    startGame(groupId, playerInGroup);
+                                    availablePlayerGroupMode.remove(keyPlayerPacket.getGroupId());
+
+                                } else {
+                                    String idGroup = "";
+                                    for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                                        if (groupScoketPlayers.get(i + "") != null) {
+                                            idGroup = i + "";
+                                        }
+                                    }
+                                    availablePlayerGroupMode.put(idGroup, Arrays.asList(socketPlayer));
+                                    IOSocket.send(socketPlayer, new WaitingPlayerGroupModePacket(idGroup));
+                                }
+                                break;
+                            }
+                            return;
                         } else {
-                            IOSocket.send(out, OutPacket.UNKNOW_REQUEST);
+                            IOSocket.send(out, BaseOutPacketInstance.UNKNOW_REQUEST);
                             return;
                         }
                     } else {
-                        IOSocket.send(out, OutPacket.ERROR_KEY);
+                        IOSocket.send(out, BaseOutPacketInstance.ERROR_KEY);
                         return;
                     }
                 }
@@ -142,10 +188,11 @@ public class SocketGameServer {
                         if (opBsPacket.get().getEType() == BaseInPacket.EInType.CLOSE) {
                             return;
                         } else {
+                            String keyPlayer = socketPlayer.getKey();
                             InGame.INSTANCE.process(opBsPacket.get(), groupScoketPlayers.get(keyPlayer_GroupId.get(keyPlayer)), keyPlayer);
                         }
                     } else {
-                        IOSocket.send(socketPlayer, OutPacket.UNKNOW_REQUEST_AFTER_CONNECT);
+                        IOSocket.send(socketPlayer, BaseOutPacketInstance.UNKNOW_REQUEST_AFTER_CONNECT);
                         return;
                     }
                 }
@@ -159,17 +206,16 @@ public class SocketGameServer {
                     if (out != null) {
                         out.close();
                     }
-
-                    if (keyPlayer != null && !keyPlayer.isEmpty()) {
-                        String groupId = keyPlayer_GroupId.get(keyPlayer);
+                    if (socketPlayer != null) {
+                        String groupId = keyPlayer_GroupId.get(socketPlayer.getKey());
                         if (groupScoketPlayers.get(groupId) != null) {
                             if (groupScoketPlayers.get(groupId).getSocketPlayers().isEmpty()) {
                                 groupScoketPlayers.remove(groupId);
-                                keyPlayer_GroupId.remove(keyPlayer);
+                                keyPlayer_GroupId.remove(socketPlayer.getKey());
                             }
                         }
-
                     }
+
                     if (!socket.isClosed()) {
                         socket.close();
 
@@ -181,7 +227,7 @@ public class SocketGameServer {
                 if (availablePlayer.contains(socketPlayer)) {
                     availablePlayer.remove(socketPlayer);
                 }
-                LOGGER.info("Close connect of User: " + keyPlayer);
+                LOGGER.info("Close connect of User: " + socketPlayer.getKey());
             }
 
         }
