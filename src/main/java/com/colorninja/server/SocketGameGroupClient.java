@@ -19,7 +19,7 @@ import java.util.Scanner;
  *
  * @author namhcn
  */
-public class SocketGameClient {
+public class SocketGameGroupClient {
 
     String serverAddress;
     Scanner in;
@@ -27,7 +27,7 @@ public class SocketGameClient {
     String name;
     String groupId;
 
-    public SocketGameClient(String serverAddress, String name) {
+    public SocketGameGroupClient(String serverAddress, String name) {
         this.serverAddress = serverAddress;
         this.name = name;
     }
@@ -56,10 +56,13 @@ public class SocketGameClient {
                 System.err.println("resultObject" + resultObject);
                 if ((double) resultObject.get("type") == 2) {
                     JsonObject jo = new JsonObject();
-                    jo.addProperty("type", 2);
+                    jo.addProperty("type", 7);
                     jo.addProperty("keyPlayer", name);
                     jo.addProperty("username", name + "username");
-
+                    if (name.contains("Quy")) {
+                        System.err.println("groupDI"+groupId);
+                        jo.addProperty("groupId", 0);
+                    }
                     out.println(jo.toString());
 //                    if (name.contains("Nam")) {
 //                        out.close();
@@ -80,7 +83,12 @@ public class SocketGameClient {
                     jo.addProperty("type", 0);
                     Map m = (Map) resultObject.get("boardGame");
                 } else if ((double) resultObject.get("type") == 6) {
+                    groupId = 0 + "";
+
                     //infogroup
+                } else if ((double) resultObject.get("type") == 7) {
+                    groupId = 0 + "";
+
                 } else {
                     System.err.println(name + "_" + getDate() + resultObject);
                 }
@@ -97,7 +105,7 @@ public class SocketGameClient {
     }
 
     public static void main(String[] args) throws Exception {
-        SocketGameClient client = new SocketGameClient("127.0.0.1", "Nam" + Utils._randomColor.nextInt(4000));
+        SocketGameGroupClient client = new SocketGameGroupClient("127.0.0.1", "Nam" + Utils._randomColor.nextInt(4000));
         Thread thread = new Thread() {
             public void run() {
                 try {
@@ -108,7 +116,7 @@ public class SocketGameClient {
         };
         thread.start();
         Thread.sleep(1000);
-        SocketGameClient client2 = new SocketGameClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
+        SocketGameGroupClient client2 = new SocketGameGroupClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
         Thread thread2 = new Thread() {
             public void run() {
                 try {

@@ -12,11 +12,14 @@ com/colorninja/input/BaseInPacket.class
 com/colorninja/buissiness/output/OutNewBoardPacket$PREVIOUS_STATE.class
 com/colorninja/buissiness/output/WaitingPlayerGroupModePacket.class
 com/colorninja/input/KeyPlayerGroupModePacket.class
+com/colorninja/server/SocketGameGroupClient$2.class
 com/colorninja/entity/BoardGame.class
 com/colorninja/input/KeyPlayerPacket.class
+com/colorninja/server/SocketGameGroupClient$1.class
 com/colorninja/buissiness/output/OutNewBoardPacket.class
 com/colorninja/buissiness/output/OutBoardInfoPacket.class
 com/colorninja/input/InGamePacket.class
+com/colorninja/server/SocketGameGroupClient.class
 com/colorninja/input/BaseInPacket$1.class
 com/colorninja/entity/Utils.class
 com/colorninja/server/SocketGameClient.class

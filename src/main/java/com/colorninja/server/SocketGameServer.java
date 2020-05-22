@@ -18,7 +18,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class SocketGameServer {
 
             for (SocketPlayer player : socketPlayerInGroup) {
                 key_usernames.put(player.getKey(), player.getUserName());
-                keyPlayer_GroupId.put(socketPlayer.getKey(), groupId);
+                keyPlayer_GroupId.put(player.getKey(), groupId);
             }
 
             OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupId, key_usernames);
@@ -138,7 +137,10 @@ public class SocketGameServer {
                                 if (!availablePlayer.isEmpty()) {
                                     SocketPlayer avalPlayer = availablePlayer.get(availablePlayer.size() - 1);
                                     String keyGroup = avalPlayer.getKey() + "_" + socketPlayer.getKey();
-                                    startGame(keyGroup, Arrays.asList(avalPlayer, socketPlayer));
+                                    List<SocketPlayer> socketPlayers = new ArrayList<>();
+                                    socketPlayers.add(avalPlayer);
+                                    socketPlayers.add(socketPlayer);
+                                    startGame(keyGroup, socketPlayers);
                                     availablePlayer.remove(availablePlayer.size() - 1);
 
                                 } else {
@@ -153,9 +155,9 @@ public class SocketGameServer {
                             KeyPlayerGroupModePacket keyPlayerPacket = (KeyPlayerGroupModePacket) baseInPacket;
                             if (processKeyInputAndIsContinue(out, keyPlayerPacket)) {
                                 socketPlayer = new SocketPlayer(keyPlayerPacket.getKeyPlayer(), keyPlayerPacket.getUsername(), out, in, 0);
-                                List<SocketPlayer> playerInGroup = availablePlayerGroupMode.get(keyPlayerPacket.getGroupId());
                                 String groupId = keyPlayerPacket.getGroupId();
-                                if (!groupId.isEmpty() && playerInGroup != null) {
+                                if (groupId != null && !groupId.isEmpty()) {
+                                    List<SocketPlayer> playerInGroup = availablePlayerGroupMode.get(keyPlayerPacket.getGroupId());
                                     playerInGroup.add(socketPlayer);
                                     startGame(groupId, playerInGroup);
                                     availablePlayerGroupMode.remove(keyPlayerPacket.getGroupId());
@@ -163,11 +165,14 @@ public class SocketGameServer {
                                 } else {
                                     String idGroup = "";
                                     for (int i = 0; i < Integer.MAX_VALUE; i++) {
-                                        if (groupScoketPlayers.get(i + "") != null) {
+                                        if (groupScoketPlayers.get(i + "") == null) {
                                             idGroup = i + "";
+                                            break;
                                         }
                                     }
-                                    availablePlayerGroupMode.put(idGroup, Arrays.asList(socketPlayer));
+                                    List<SocketPlayer> socketPlayers = new ArrayList<>();
+                                    socketPlayers.add(socketPlayer);
+                                    availablePlayerGroupMode.put(idGroup, socketPlayers);
                                     IOSocket.send(socketPlayer, new WaitingPlayerGroupModePacket(idGroup));
                                 }
                                 break;
@@ -189,7 +194,9 @@ public class SocketGameServer {
                             return;
                         } else {
                             String keyPlayer = socketPlayer.getKey();
-                            InGame.INSTANCE.process(opBsPacket.get(), groupScoketPlayers.get(keyPlayer_GroupId.get(keyPlayer)), keyPlayer);
+                            String groupId = keyPlayer_GroupId.get(keyPlayer);
+                            LOGGER.error(groupScoketPlayers.get(groupId));
+                            InGame.INSTANCE.process(opBsPacket.get(), groupScoketPlayers.get(groupId), keyPlayer);
                         }
                     } else {
                         IOSocket.send(socketPlayer, BaseOutPacketInstance.UNKNOW_REQUEST_AFTER_CONNECT);

@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 public class InGame {
 
     private static final Logger LOGGER = Logger.getLogger(SocketGameServer.class);
-    private static final int MAX_WIN_NUMROUND = 100;
+    private static final int MAX_WIN_NUMROUND = 30;
     public static InGame INSTANCE = new InGame();
 
     /**
@@ -42,12 +42,12 @@ public class InGame {
      */
     public void process(BaseInPacket packet, GroupScoketPlayer groupScoketPlayer, String keyPlayer) {
         try {
-            String log = "";
-            for (Map.Entry<String, SocketPlayer> entry : groupScoketPlayer.getSocketPlayers().entrySet()) {
-                SocketPlayer socketPlayer = entry.getValue();
-                log += String.format("%s_%s", socketPlayer.getUserName(), socketPlayer.getScore());
-            }
-            LOGGER.info(String.format("%s_%s", groupScoketPlayer.getIdGroup(), log));
+//            String log = "";
+//            for (Map.Entry<String, SocketPlayer> entry : groupScoketPlayer.getSocketPlayers().entrySet()) {
+//                SocketPlayer socketPlayer = entry.getValue();
+//                log += String.format("%s_%s", socketPlayer.getUserName(), socketPlayer.getScore());
+//            }
+//            LOGGER.info(String.format("%s_%s", groupScoketPlayer.getIdGroup(), log));
 
             Map<String, SocketPlayer> mSo = groupScoketPlayer.getSocketPlayers();
             SocketPlayer curentPlayer = mSo.get(keyPlayer);

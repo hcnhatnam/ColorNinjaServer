@@ -9,6 +9,7 @@
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/entity/SocketPlayer.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/buissiness/output/BaseOutPacket.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/entity/GroupScoketPlayer.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/server/SocketGameGroupClient.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/input/KeyPlayerPacket.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/server/SocketGameClient.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/entity/BoardGame.java

@@ -25,7 +25,15 @@ public class Utils {
         for (int i = 1; i <= 5 * 20; i += 5) {
             int size = i / 5 + 2;
             for (int j = 0; j < 5; j++) {
-                MAX_POINT_IN_ROUND.add(size);
+                if (size < 7) {
+                    MAX_POINT_IN_ROUND.add(size);
+                }
+                else if (i >= 20 && i <= 40) {
+                    MAX_POINT_IN_ROUND.add(6);
+
+                } else {
+                    MAX_POINT_IN_ROUND.add(7);
+                }
             }
         }
     }
