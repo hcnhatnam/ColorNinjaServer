@@ -27,6 +27,13 @@ public class GroupScoketPlayer {
 
     }
 
+    public GroupScoketPlayer(String idGroup,SocketPlayer player1) {
+        this.idGroup = idGroup;
+        this.socketPlayers = new ConcurrentHashMap<>();
+        this.socketPlayers.put(player1.getKey(), player1);
+        this.round = 1;
+    }
+
     public GroupScoketPlayer(SocketPlayer player1, SocketPlayer player2) {
         this.idGroup = player1.getKey() + "_" + player2.getKey();
         this.socketPlayers = new ConcurrentHashMap<>();

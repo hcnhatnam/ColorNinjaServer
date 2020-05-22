@@ -20,11 +20,11 @@ public class WaitingPlayerGroupModePacket extends BaseOutPacket {
 
     private static String messageWaitingGroupMode = "wating next player to join group";
 
-    protected String idGroup;
+    protected String groupId;
 
     public WaitingPlayerGroupModePacket(String idGroup) {
         super(TYPE_WAITING_GROUP, messageWaitingGroupMode);
-        this.idGroup = idGroup;
+        this.groupId = idGroup;
     }
 
 }

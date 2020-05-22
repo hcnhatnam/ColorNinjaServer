@@ -19,6 +19,8 @@ import lombok.Setter;
 public class BaseOutPacket implements Serializable {
 
     public static int ROUND_EXCEED = -10;
+    public static int GROUP_NOT_EXIST = -9;
+
     public static int UNKNOW_REQUEST_AFTER_CONNECT = -6;
     public static int UNKNOW_REQUEST = -5;
     public static int ROUND_EXPIRED = -3;
@@ -31,7 +33,6 @@ public class BaseOutPacket implements Serializable {
     public static int TYPE_BOARD_INFO = 6;
     public static int TYPE_WAITING_GROUP = 7;
 
-    
     protected int type;
     protected String message;
 

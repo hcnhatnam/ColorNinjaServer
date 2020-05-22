@@ -115,7 +115,7 @@ public class SocketGameGroupClient {
             }
         };
         thread.start();
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         SocketGameGroupClient client2 = new SocketGameGroupClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
         Thread thread2 = new Thread() {
             public void run() {
