@@ -15,12 +15,13 @@ import com.colorninja.buissiness.output.OutNewBoardPacket;
 import com.colorninja.buissiness.output.OutNewBoardPacket.PREVIOUS_STATE;
 import com.colorninja.buissiness.output.OutWinGamePacket;
 import com.colorninja.buissiness.output.OutWinGamePacket.ScorePlayer;
-import com.colorninja.entity.Utils;
 import com.colorninja.server.SocketGameServer;
+import com.server.entity.LeaderBoard;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,13 +43,6 @@ public class InGame {
      */
     public void process(BaseInPacket packet, GroupScoketPlayer groupScoketPlayer, String keyPlayer) {
         try {
-//            String log = "";
-//            for (Map.Entry<String, SocketPlayer> entry : groupScoketPlayer.getSocketPlayers().entrySet()) {
-//                SocketPlayer socketPlayer = entry.getValue();
-//                log += String.format("%s_%s", socketPlayer.getUserName(), socketPlayer.getScore());
-//            }
-//            LOGGER.info(String.format("%s_%s", groupScoketPlayer.getIdGroup(), log));
-
             Map<String, SocketPlayer> mSo = groupScoketPlayer.getSocketPlayers();
             SocketPlayer curentPlayer = mSo.get(keyPlayer);
             if (packet.getEType() == BaseInPacket.EInType.WIN) {
@@ -59,8 +53,9 @@ public class InGame {
                 }
                 int currentRount = groupScoketPlayer.getRound();
                 if (currentRount == MAX_WIN_NUMROUND) {
+                    int nextRound = setNewRound(groupScoketPlayer);
                     curentPlayer.setScore(curentPlayer.getScore() + 1);
-                    winGame(mSo);
+                    winGameAnSaveScore(mSo);
                 } else if (currentRount < MAX_WIN_NUMROUND) {
                     int nextRound = setNewRound(groupScoketPlayer);
                     Map<PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(nextRound);
@@ -91,7 +86,7 @@ public class InGame {
                 }
                 IOSocket.broadcast(mSo.values(), baseOutPackets);
             } else if (packet.getEType() == BaseInPacket.EInType.STOP_ROUND) {
-                winGame(mSo);
+                winGameAnSaveScore(mSo);
             }
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
@@ -118,24 +113,78 @@ public class InGame {
         int currentRount = groupScoketPlayer.getRound();
         int nextRound = currentRount + 1;
         groupScoketPlayer.setRound(nextRound);
+        GroupScoketPlayer group = SocketGameServer.groupScoketPlayers.get(groupScoketPlayer.getIdGroup());
+//        if (group != null) {
+//            group.setRound(nextRound);
+//
+//        }
         return nextRound;
     }
 
-    public void winGame(Map<String, SocketPlayer> mSo) {
-        List<ScorePlayer> scorePlayers = new ArrayList<>();
-        String winnerKey = "";
-        int maxScore = 0;
-        for (Map.Entry<String, SocketPlayer> entry : mSo.entrySet()) {
-            String key = entry.getKey();
-            SocketPlayer sk = entry.getValue();
-            if (sk.getScore() > maxScore) {
-                winnerKey = key;
-                maxScore = sk.getScore();
+    public void winGameAnSaveScore(Map<String, SocketPlayer> mSo) {
+        try {
+
+            OutWinGamePacket winPacket = genOutputWinGame(mSo);
+            for (ScorePlayer socketPlayer : winPacket.getScorePlayers()) {
+                Optional<LeaderBoard.ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(socketPlayer.getKeyPlayer());
+                LeaderBoard.ScoreUser scoreUser = null;
+                if (socketPlayer.getScore() == winPacket.getWinnerscore()) {
+                    if (op.isPresent()) {
+                        scoreUser = op.get();
+                        scoreUser.setNumWinGame(scoreUser.getNumWinGame() + 1);
+                    } else {
+                        SocketPlayer player = mSo.get(socketPlayer.getKeyPlayer());
+                        scoreUser = new LeaderBoard.ScoreUser(player.getKey(),
+                                player.getUserName(), 0, 1, 0);
+                    }
+                } else {
+                    if (op.isPresent()) {
+                        scoreUser = op.get();
+                        scoreUser.setNumLooseGame(scoreUser.getNumWinGame() + 1);
+                    } else {
+                        SocketPlayer player = mSo.get(socketPlayer.getKeyPlayer());
+                        scoreUser = new LeaderBoard.ScoreUser(player.getKey(),
+                                player.getUserName(), 0, 0, 1);
+                    }
+                }
+
+                LeaderBoard.INSTANCE.insertOrUpdate(scoreUser);
             }
-            ScorePlayer scorePlayer = new ScorePlayer(key, sk.getScore());
-            scorePlayers.add(scorePlayer);
+            IOSocket.broadcast(mSo.values(), winPacket);
+
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
         }
-        OutWinGamePacket winPacket = new OutWinGamePacket(winnerKey, maxScore, scorePlayers);
+    }
+
+    public OutWinGamePacket genOutputWinGame(Map<String, SocketPlayer> mSo) {
+        try {
+
+            List<ScorePlayer> scorePlayers = new ArrayList<>();
+            String winnerKey = "";
+            int maxScore = 0;
+            for (Map.Entry<String, SocketPlayer> entry : mSo.entrySet()) {
+                String key = entry.getKey();
+                SocketPlayer sk = entry.getValue();
+                if (sk.getScore() > maxScore) {
+                    winnerKey = key;
+                    maxScore = sk.getScore();
+                }
+                ScorePlayer scorePlayer = new ScorePlayer(key, sk.getScore());
+                scorePlayers.add(scorePlayer);
+                System.err.println(entry.getKey() + "ddddddddddd");
+            }
+            OutWinGamePacket winPacket = new OutWinGamePacket(winnerKey, maxScore, scorePlayers);
+            return winPacket;
+
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    public void winGame(Map<String, SocketPlayer> mSo) {
+        OutWinGamePacket winPacket = genOutputWinGame(mSo);
         IOSocket.broadcast(mSo.values(), winPacket);
     }
 }

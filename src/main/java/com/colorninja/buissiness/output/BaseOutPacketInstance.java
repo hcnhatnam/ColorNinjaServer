@@ -22,5 +22,6 @@ public class BaseOutPacketInstance {
     public static BaseOutPacket ROUND_EXPIRED = new BaseOutPacket(BaseOutPacket.ROUND_EXPIRED, "round expired");
     public static BaseOutPacket ROUND_EXCEED = new BaseOutPacket(BaseOutPacket.ROUND_EXCEED, "exceed max round");
     public static BaseOutPacket GROUP_NOT_EXIST = new BaseOutPacket(BaseOutPacket.GROUP_NOT_EXIST, "group not exist");
+    public static BaseOutPacket COMPETITER_DISCONETED = new BaseOutPacket(BaseOutPacket.COMPETITER_DISCONETED, "competiter disconected");
 
 }

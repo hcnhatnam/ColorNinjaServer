@@ -13,3 +13,5 @@ buildNumber.properties
 deploy.cmd
 ssh.sh
 myapp.log
+deployServer.cmd
+runservice2

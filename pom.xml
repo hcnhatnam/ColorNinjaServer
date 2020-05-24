@@ -30,7 +30,24 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty.aggregate/jetty-all -->
+        <dependency>
+            <groupId>org.eclipse.jetty.aggregate</groupId>
+            <artifactId>jetty-all</artifactId>
+            <version>9.4.28.v20200408</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.4.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.7.0-rc0</version>
+        </dependency>
+        <!-- Thanks for using https://jar-download.com -->
     </dependencies>
     <build>
         <plugins>

@@ -18,6 +18,7 @@ import lombok.Setter;
 @Setter
 public class BaseOutPacket implements Serializable {
 
+    public static int COMPETITER_DISCONETED = -11;
     public static int ROUND_EXCEED = -10;
     public static int GROUP_NOT_EXIST = -9;
 

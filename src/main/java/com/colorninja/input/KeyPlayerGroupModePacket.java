@@ -5,6 +5,7 @@
  */
 package com.colorninja.input;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class KeyPlayerGroupModePacket extends KeyPlayerPacket {
 
-    protected String groupId;
+    private String groupId;
 
     public KeyPlayerGroupModePacket(String keyPlayer, String groupId) {
         super(EInType.GET_KEY_GROUP_MODE, keyPlayer);
