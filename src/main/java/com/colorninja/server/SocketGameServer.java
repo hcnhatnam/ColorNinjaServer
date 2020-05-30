@@ -271,6 +271,7 @@ public class SocketGameServer {
                         }
                         keyPlayer_GroupId.remove(en.getKey());
                     }
+                    break;
 
                 }
             }

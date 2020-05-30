@@ -49,7 +49,7 @@ public class RegisterUserHandler extends BaseModel {
                 Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
                 if (!op.isPresent()) {
                     ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0);
-                    LeaderBoard.INSTANCE.insertOrUpdate(scoreUser);
+                    LeaderBoard.INSTANCE.insert(scoreUser);
                     LOGGER.info(scoreUser);
                 } else {
                     resultObject.setError(ResultObject.ERROR);

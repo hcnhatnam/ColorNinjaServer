@@ -15,6 +15,8 @@ import com.server.entity.LeaderBoard.ScoreUser;
 import com.server.entity.ResultObject;
 import com.server.model.BaseModel;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,56 @@ import org.apache.log4j.Logger;
 public class UserHandler extends BaseModel {
 
     private static final Logger LOGGER = Logger.getLogger(UserHandler.class);
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ResultObject resultObject = new ResultObject(0, "");
+
+        try {
+            String key = HReqParam.getString(req, "key");
+            String type = "";
+            try {
+                type = HReqParam.getString(req, "type");
+            } catch (Exception e) {
+            }
+
+            Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
+            if (op.isPresent()) {
+                ScoreUser scoreUser = op.get();
+                resultObject.putData("user", scoreUser);
+                int rank = 1;
+                List<ScoreUser> allUsers = new ArrayList<>();
+                if (type.equals("solo")) {
+                    allUsers = LeaderBoard.INSTANCE.getLeaderBoardSolo();
+                } else {
+                    allUsers = LeaderBoard.INSTANCE.getLeaderBoard();
+                }
+                for (ScoreUser user : allUsers) {
+                    if (user.getKey().equals(key)) {
+                        break;
+                    } else {
+                        rank++;
+                    }
+                }
+                List<ScoreUser> preUsers = allUsers.subList(0, rank > 10 ? 10 : rank);
+                List<ScoreUser> lastUsers = allUsers.subList(rank, rank + 10 > allUsers.size() ? allUsers.size() : rank + 10);
+
+                resultObject.putData("rank", rank);
+                resultObject.putData("preusers", preUsers);
+                resultObject.putData("lastusers", lastUsers);
+
+            } else {
+                resultObject.setError(ResultObject.ERROR);
+                resultObject.setMessage("User not Found !!!");
+            }
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            resultObject.setError(ResultObject.ERROR);
+            resultObject.setMessage(ex.getMessage());
+        }
+
+        returnJSon(resp, resultObject.toString());
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -76,7 +128,7 @@ public class UserHandler extends BaseModel {
                         }
                     }
                     if (isUpdate) {
-                        LeaderBoard.INSTANCE.insertOrUpdate(scoreUser);
+                        LeaderBoard.INSTANCE.Update(scoreUser);
                     }
                     LOGGER.info(scoreUser);
                 } else {

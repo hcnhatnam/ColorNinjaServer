@@ -111,14 +111,17 @@ public class LeaderBoard {
         }
         return Optional.empty();
     }
-
-    public void insertOrUpdate(ScoreUser scoreUser) {
-        _collection.findOneAndDelete(eq("username", scoreUser.getUsername()));
+        public void insert(ScoreUser scoreUser) {
         _collection.insertOne(scoreUser.getDocument());
     }
 
+    public void Update(ScoreUser scoreUser) {
+        _collection.replaceOne(eq("key", scoreUser.getKey()), scoreUser.getDocument());
+    }
+
     public static void main(String[] args) {
-        System.err.println(INSTANCE.getUserScore("D9CCB221-1D0A-4DAA-A3AA-93ADFC383CD9"));
+//        System.err.println(INSTANCE.getUserScore("").get());
+        ScoreUser scoreUser = new ScoreUser("D9CCB221-1D0A-4DAA-A3AA-93ADFC383CD9", "namhcn2", 0, 0, 0);
 //        INSTANCE.insertOrUpdate(new ScoreUser(1 + "", "namhcn", "http://avata.com", 1, 10, 5));
 //        System.err.println(Utils.gson.toJson(INSTANCE.getLeaderBoard()));
     }

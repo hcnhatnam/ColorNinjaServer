@@ -148,7 +148,7 @@ public class InGame {
                     }
                 }
 
-                LeaderBoard.INSTANCE.insertOrUpdate(scoreUser);
+                LeaderBoard.INSTANCE.Update(scoreUser);
             }
             IOSocket.broadcast(mSo.values(), winPacket);
 
