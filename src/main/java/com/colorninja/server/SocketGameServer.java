@@ -14,6 +14,7 @@ import com.colorninja.buissiness.output.OutNewBoardPacket;
 import com.colorninja.buissiness.output.OutNewBoardPacket.PREVIOUS_STATE;
 import com.colorninja.buissiness.output.WaitingPlayerGroupModePacket;
 import com.colorninja.entity.SlotLock;
+import com.server.model.BotGame;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -28,6 +29,8 @@ import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 public class SocketGameServer {
@@ -156,13 +159,13 @@ public class SocketGameServer {
                             if (processKeyInputAndIsContinue(out, keyPlayerPacket)) {
                                 socketPlayer = new SocketPlayer(keyPlayerPacket.getKeyPlayer(), keyPlayerPacket.getUsername(), out, in, 0);
                                 if (!availablePlayer.isEmpty()) {
-                                    SocketPlayer avalPlayer = availablePlayer.get(availablePlayer.size() - 1);
+                                    SocketPlayer avalPlayer = availablePlayer.get(0);
                                     String keyGroup = System.currentTimeMillis() + "";
                                     List<SocketPlayer> socketPlayers = new ArrayList<>();
                                     socketPlayers.add(avalPlayer);
                                     socketPlayers.add(socketPlayer);
                                     startGame(keyGroup, socketPlayers);
-                                    availablePlayer.remove(availablePlayer.size() - 1);
+                                    availablePlayer.remove(0);
 
                                 } else {
                                     availablePlayer.add(socketPlayer);
@@ -308,14 +311,27 @@ public class SocketGameServer {
 
     }
 
+    public static ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+
     public static void main(String[] args) throws IOException {
+        ses.scheduleWithFixedDelay(() -> {
+            if (!availablePlayer.isEmpty()) {
+                System.err.println(availablePlayer.get(0).getUserName());
+                long waitTime = System.currentTimeMillis() - availablePlayer.get(0).getCreatedTime();
+                if (waitTime > 5000) {
+                    BotGame.startBoot();
+                }
+            }
+        }, 5, 2, TimeUnit.SECONDS);
         LOGGER.info("The chat server is running...8080");
         ExecutorService pool = Executors.newFixedThreadPool(20);
         try (ServerSocket listener = new ServerSocket(8080)) {
+
             while (true) {
                 pool.execute(new Handler(listener.accept()));
             }
         }
+
     }
 
 }

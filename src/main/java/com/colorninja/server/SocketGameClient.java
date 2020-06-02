@@ -54,6 +54,8 @@ public class SocketGameClient {
                 String line = in.nextLine();
                 Map<String, Object> resultObject = Utils.gson.fromJson(line, Map.class);
                 System.err.println("resultObject" + resultObject);
+                                Thread.sleep(1000 + Utils._randomColor.nextInt(400));
+
                 if ((double) resultObject.get("type") == 2) {
                     JsonObject jo = new JsonObject();
                     jo.addProperty("type", 2);
@@ -107,16 +109,16 @@ public class SocketGameClient {
             }
         };
         thread.start();
-        Thread.sleep(1000);
-        SocketGameClient client2 = new SocketGameClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
-        Thread thread2 = new Thread() {
-            public void run() {
-                try {
-                    client2.run();
-                } catch (Exception ex) {
-                }
-            }
-        };
-        thread2.start();
+//        Thread.sleep(1000);
+//        SocketGameClient client2 = new SocketGameClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
+//        Thread thread2 = new Thread() {
+//            public void run() {
+//                try {
+//                    client2.run();
+//                } catch (Exception ex) {
+//                }
+//            }
+//        };
+//        thread2.start();
     }
 }

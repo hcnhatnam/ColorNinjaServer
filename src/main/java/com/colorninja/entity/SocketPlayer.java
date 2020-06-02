@@ -29,5 +29,15 @@ public class SocketPlayer {
     private PrintWriter out;
     private Scanner in;
     private int score;
+    private long createdTime;
+
+    public SocketPlayer(String key, String userName, PrintWriter out, Scanner in, int score) {
+        this.key = key;
+        this.userName = userName;
+        this.out = out;
+        this.in = in;
+        this.score = score;
+        this.createdTime = System.currentTimeMillis();
+    }
 
 }

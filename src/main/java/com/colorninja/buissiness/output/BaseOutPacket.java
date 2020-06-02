@@ -24,6 +24,7 @@ public class BaseOutPacket implements Serializable {
 
     public static int UNKNOW_REQUEST_AFTER_CONNECT = -6;
     public static int UNKNOW_REQUEST = -5;
+    public static int EXCEED_ROUND_CURRENT=-4;
     public static int ROUND_EXPIRED = -3;
     public static int PLAYER_KEY_EXISTED = -2;
     public static int ERROR_KEY = -1;

@@ -47,8 +47,11 @@ public class InGame {
             SocketPlayer curentPlayer = mSo.get(keyPlayer);
             if (packet.getEType() == BaseInPacket.EInType.WIN) {
                 InGamePacket inGamePacket = (InGamePacket) packet;
-                if (inGamePacket.getRound() != groupScoketPlayer.getRound()) {
+                if (inGamePacket.getRound() < groupScoketPlayer.getRound()) {
                     IOSocket.send(curentPlayer, BaseOutPacketInstance.ROUND_EXPIRED);
+                    return;
+                } else if (inGamePacket.getRound() > groupScoketPlayer.getRound()) {
+                    IOSocket.send(curentPlayer, BaseOutPacketInstance.EXCEED_ROUND_CURRENT);
                     return;
                 }
                 int currentRount = groupScoketPlayer.getRound();

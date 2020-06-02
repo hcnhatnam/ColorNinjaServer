@@ -25,27 +25,34 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 public class RegisterUserHandler extends BaseModel {
-    
+
     private static final Logger LOGGER = Logger.getLogger(RegisterUserHandler.class);
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ResultObject resultObject = new ResultObject(0, "");
-        
+
         try {
-            String key = HReqParam.getString(req, "key");
-            String username = HReqParam.getString(req, "username");
-            String avatar = HReqParam.getString(req, "avatar");
+            String key = "";
+            String username = "";
+            String avatar = "";
+            try {
+                key = HReqParam.getString(req, "key");
+                username = HReqParam.getString(req, "username");
+                avatar = HReqParam.getString(req, "avatar");
+            } catch (Exception e) {
+            }
             if (key.isEmpty()) {
                 resultObject.setError(ResultObject.ERROR);
                 resultObject.setMessage("key is empty");
             } else if (username.isEmpty()) {
                 resultObject.setError(ResultObject.ERROR);
                 resultObject.setMessage("username is empty");
-            } else if (avatar.isEmpty()) {
-                resultObject.setError(ResultObject.ERROR);
-                resultObject.setMessage("avata is empty");
-            } else {
+            } //            else if (avatar.isEmpty()) {
+            //                resultObject.setError(ResultObject.ERROR);
+            //                resultObject.setMessage("avatar is empty");
+            //            } 
+            else {
                 Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
                 if (!op.isPresent()) {
                     ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0);
@@ -61,7 +68,7 @@ public class RegisterUserHandler extends BaseModel {
             resultObject.setError(ResultObject.ERROR);
             resultObject.setMessage(ex.getMessage());
         }
-        
+
         returnJSon(resp, resultObject.toString());
     }
 //    @Override

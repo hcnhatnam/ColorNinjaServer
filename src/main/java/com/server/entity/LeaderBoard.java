@@ -48,15 +48,17 @@ public class LeaderBoard {
         public ScoreUser(String key, String username, int maxScore, int numWinGame, int numLooseGame) {
             this.key = key;
             this.username = username;
+            this.avatar = "";
             this.bestscore = maxScore;
             this.numWinGame = numWinGame;
             this.numLooseGame = numLooseGame;
             this.createTime = System.currentTimeMillis();
         }
 
-        public ScoreUser(String key, String username, String avata, int maxScore, int numWinGame, int numLooseGame) {
+        public ScoreUser(String key, String username, String avatar, int maxScore, int numWinGame, int numLooseGame) {
             this.key = key;
             this.username = username;
+            this.avatar = avatar;
             this.bestscore = maxScore;
             this.numWinGame = numWinGame;
             this.numLooseGame = numLooseGame;
@@ -66,7 +68,7 @@ public class LeaderBoard {
         public Document getDocument() {
             Document document = new Document("key", this.key)
                     .append("username", this.username)
-                    .append("avata", this.avatar)
+                    .append("avatar", this.avatar)
                     .append("bestscore", this.bestscore)
                     .append("numWinGame", this.numWinGame)
                     .append("numLooseGame", this.numLooseGame);
@@ -111,7 +113,8 @@ public class LeaderBoard {
         }
         return Optional.empty();
     }
-        public void insert(ScoreUser scoreUser) {
+
+    public void insert(ScoreUser scoreUser) {
         _collection.insertOne(scoreUser.getDocument());
     }
 

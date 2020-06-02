@@ -28,4 +28,5 @@
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/server/handler/UserHandler.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/buissiness/output/BaseOutPacket.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/server/SocketGameGroupClient.java
+/home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/server/model/BotGame.java
 /home/namhcn/Documents/study/ColorNinjaServer/src/main/java/com/colorninja/input/KeyPlayerGroupModePacket.java
