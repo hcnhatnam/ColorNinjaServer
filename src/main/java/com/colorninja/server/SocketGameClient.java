@@ -54,7 +54,7 @@ public class SocketGameClient {
                 String line = in.nextLine();
                 Map<String, Object> resultObject = Utils.gson.fromJson(line, Map.class);
                 System.err.println("resultObject" + resultObject);
-                                Thread.sleep(1000 + Utils._randomColor.nextInt(400));
+//                Thread.sleep(1000 + Utils._randomColor.nextInt(400));
 
                 if ((double) resultObject.get("type") == 2) {
                     JsonObject jo = new JsonObject();

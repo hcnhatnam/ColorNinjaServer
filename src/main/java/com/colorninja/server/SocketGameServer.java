@@ -315,14 +315,16 @@ public class SocketGameServer {
 
     public static void main(String[] args) throws IOException {
         ses.scheduleWithFixedDelay(() -> {
+
+            LOGGER.error("availablePlayer:" + availablePlayer.size());
             if (!availablePlayer.isEmpty()) {
                 System.err.println(availablePlayer.get(0).getUserName());
                 long waitTime = System.currentTimeMillis() - availablePlayer.get(0).getCreatedTime();
-                if (waitTime > 5000) {
+                if (waitTime > 1000) {
                     BotGame.startBoot();
                 }
             }
-        }, 5, 2, TimeUnit.SECONDS);
+        }, 5, 10, TimeUnit.SECONDS);
         LOGGER.info("The chat server is running...8080");
         ExecutorService pool = Executors.newFixedThreadPool(20);
         try (ServerSocket listener = new ServerSocket(8080)) {

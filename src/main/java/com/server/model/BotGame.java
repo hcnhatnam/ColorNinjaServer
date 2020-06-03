@@ -6,14 +6,15 @@
 package com.server.model;
 
 import com.colorninja.entity.Utils;
-import com.colorninja.server.SocketGameClient;
-import com.colorninja.server.SocketGameServer;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 /**
@@ -39,6 +40,7 @@ public class BotGame {
         printWriter.println(jsonObject.toString());
     }
     Double currentRound = 0d;
+    public static ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public void run() throws IOException, InterruptedException {
         try {
@@ -47,6 +49,8 @@ public class BotGame {
             out = new PrintWriter(socket.getOutputStream(), true);
             while (in.hasNextLine()) {
                 String line = in.nextLine();
+                LOGGER.error("xxxrecive:" + line);
+
                 Map<String, Object> resultObject = Utils.gson.fromJson(line, Map.class);
                 if ((double) resultObject.get("type") == 2) {
                     JsonObject jo = new JsonObject();
@@ -56,32 +60,49 @@ public class BotGame {
                     out.println(jo.toString());
 
                 } else if ((double) resultObject.get("type") == 5) {
-                    Thread.sleep(1000 + Utils._randomColor.nextInt(500));
                     JsonObject jo = new JsonObject();
                     jo.addProperty("type", 0);
                     Map m = (Map) resultObject.get("boardGame");
                     jo.addProperty("round", (Double) m.get("round"));
-                    out.println(jo.toString());
-                    currentRound = (Double) m.get("round");
 
+                    currentRound = (Double) m.get("round");
+                    int delay = (1150 + (int) ((currentRound + 1) / 5) * (currentRound > 20 ? 150 : 100) + Utils._randomColor.nextInt(200));
+                    LOGGER.error("deplay:" + delay);
+
+                    new java.util.Timer().schedule(
+                            new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            LOGGER.error("xxxSendWin:" + jo.toString());
+                            out.println(jo.toString());
+                        }
+                    },
+                            currentRound == 1 ? 4000 : delay
+                    );
                 } else if ((double) resultObject.get("type") == 4) {
                     JsonObject jo = new JsonObject();
                     jo.addProperty("type", 0);
                     Map m = (Map) resultObject.get("boardGame");
                 } else if ((double) resultObject.get("type") == 6) {
                     //infogroup
-                } else if ((double) resultObject.get("type") == -3) {
-                    JsonObject jo = new JsonObject();
-                    jo.addProperty("type", 0);
-                    jo.addProperty("round", ++currentRound);
-                    out.println(jo.toString());
-                } else if ((double) resultObject.get("type") == -4) {
-                    JsonObject jo = new JsonObject();
-                    jo.addProperty("type", 0);
-                    jo.addProperty("round", --currentRound);
-                    out.println(jo.toString());
                 }
 
+//                else if ((double) resultObject.get("type") == -3) {
+//                    Thread.sleep(300 + Utils._randomColor.nextInt(500));
+//
+//                    JsonObject jo = new JsonObject();
+//                    jo.addProperty("type", 0);
+//                    jo.addProperty("round", ++currentRound);
+//                    out.println(jo.toString());
+//                } else if ((double) resultObject.get("type") == -4) {
+//                    Thread.sleep(300 + Utils._randomColor.nextInt(500));
+//
+//                    JsonObject jo = new JsonObject();
+//                    jo.addProperty("type", 0);
+//                    jo.addProperty("round", --currentRound);
+//                    out.println(jo.toString());
+//                }
+                LOGGER.error("xxxwating:");
             }
         } finally {
         }
@@ -89,8 +110,9 @@ public class BotGame {
 
     public static void startBoot() {
         try {
+            LOGGER.error("bottttttttttttttttttttttttttttt");
 
-            SocketGameClient client = new SocketGameClient("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));
+            BotGame client = new BotGame("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));
             Thread thread = new Thread() {
                 public void run() {
                     try {
@@ -105,27 +127,31 @@ public class BotGame {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        SocketGameClient client = new SocketGameClient("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    client.run();
-                } catch (Exception ex) {
-                }
-            }
-        };
-        thread.start();
-//        Thread.sleep(1000);
-//        SocketGameClient client2 = new SocketGameClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
-//        Thread thread2 = new Thread() {
+    public static void main(String[] args) {
+
+        System.err.println(11 / 10);
+    }
+//    public static void main(String[] args) throws Exception {
+//        SocketGameClient client = new SocketGameClient("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));
+//        Thread thread = new Thread() {
 //            public void run() {
 //                try {
-//                    client2.run();
+//                    client.run();
 //                } catch (Exception ex) {
 //                }
 //            }
 //        };
-//        thread2.start();
-    }
+//        thread.start();
+////        Thread.sleep(1000);
+////        SocketGameClient client2 = new SocketGameClient("127.0.0.1", "Quy" + Utils._randomColor.nextInt(4000));
+////        Thread thread2 = new Thread() {
+////            public void run() {
+////                try {
+////                    client2.run();
+////                } catch (Exception ex) {
+////                }
+////            }
+////        };
+////        thread2.start();
+//    }
 }
