@@ -10,6 +10,9 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
@@ -41,6 +44,7 @@ public class BotGame {
     }
     Double currentRound = 0d;
     public static ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    public static List<String> names = Collections.synchronizedList(Arrays.asList("MongHoang", "LapHoang", "NamHoang", "QuyNguyen", "TranQuy", "TaiNgo", "HuuTai", "JohnWick", "Samuen", "Linh Do", "LinhDuc", "DucLinh"));
 
     public void run() throws IOException, InterruptedException {
         try {
@@ -56,7 +60,7 @@ public class BotGame {
                     JsonObject jo = new JsonObject();
                     jo.addProperty("type", 2);
                     jo.addProperty("keyPlayer", name);
-                    jo.addProperty("username", name + "username");
+                    jo.addProperty("username", name);
                     out.println(jo.toString());
 
                 } else if ((double) resultObject.get("type") == 5) {
@@ -66,7 +70,7 @@ public class BotGame {
                     jo.addProperty("round", (Double) m.get("round"));
 
                     currentRound = (Double) m.get("round");
-                    int delay = (1150 + (int) ((currentRound + 1) / 5) * (currentRound > 20 ? 150 : 100) + Utils._randomColor.nextInt(200));
+                    int delay = (1120 + (int) ((currentRound + 1) / 5) * (currentRound > 20 ? 150 : 100) + Utils._randomColor.nextInt(200));
                     LOGGER.error("deplay:" + delay);
 
                     new java.util.Timer().schedule(
@@ -112,7 +116,7 @@ public class BotGame {
         try {
             LOGGER.error("bottttttttttttttttttttttttttttt");
 
-            BotGame client = new BotGame("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));
+            BotGame client = new BotGame("127.0.0.1", names.get(Utils._randomColor.nextInt(names.size() - 1)));
             Thread thread = new Thread() {
                 public void run() {
                     try {
