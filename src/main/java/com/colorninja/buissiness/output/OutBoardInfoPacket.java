@@ -5,7 +5,8 @@
  */
 package com.colorninja.buissiness.output;
 
-import com.server.entity.LeaderBoard;
+import com.database.LeaderBoard;
+import com.server.entity.ScoreUser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class OutBoardInfoPacket extends BaseOutPacket {
 
     protected String idGroup;
     protected Map<String, String> key_usernames;
-    protected Map<String, LeaderBoard.ScoreUser> key_avatars;
+    protected Map<String, ScoreUser> key_avatars;
 
     public OutBoardInfoPacket(String idRoom, Map<String, String> key_usernames) {
         super(TYPE_BOARD_INFO);
@@ -30,7 +31,7 @@ public class OutBoardInfoPacket extends BaseOutPacket {
         this.key_usernames = key_usernames;
         key_avatars = new HashMap<>();
         for (String key : key_usernames.keySet()) {
-            Optional<LeaderBoard.ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
+            Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
             if (op.isPresent()) {
                 key_avatars.put(key, op.get());
             } else {

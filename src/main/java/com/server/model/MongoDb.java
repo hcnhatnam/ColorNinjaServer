@@ -5,8 +5,11 @@
  */
 package com.server.model;
 
-import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import java.util.Arrays;
 
 /**
  *
@@ -18,12 +21,22 @@ public class MongoDb {
     private MongoDatabase _leaderboardDB;
     private MongoClient _mongoClient;
 
-    private MongoDb() {
-        _mongoClient = new MongoClient("119.82.135.105", 27017);
-        _leaderboardDB = _mongoClient.getDatabase("colorninja");
-    }
-
+//    private MongoDb() {
+////        MongoCredential credential = MongoCredential.createCredential("namhcn", "cool_db", "11112222".toCharArray());
+////        _mongoClient = new MongoClient(new ServerAddress("119.82.135.105", 27017), Arrays.asList(credential));
+//        
+//        
+//        MongoCredential credential = MongoCredential.createCredential("ian", "cool_db", "secretPassword".toCharArray());
+//        _mongoClient = new MongoClient(new ServerAddress("35.198.220.200", 27017), Arrays.asList(credential));
+//
+//        _leaderboardDB = _mongoClient.getDatabase("cool_db");
+//    }
+//
     public MongoDatabase getleaderBoardDB() {
         return _leaderboardDB;
     }
+
+//    public static void main(String[] args) {
+//        System.err.println(System.currentTimeMillis());
+//    }
 }

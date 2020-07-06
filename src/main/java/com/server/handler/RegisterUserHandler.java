@@ -11,9 +11,9 @@ package com.server.handler;
  */
 import com.colorninja.entity.Utils;
 import com.server.entity.HReqParam;
-import com.server.entity.LeaderBoard;
-import com.server.entity.LeaderBoard.ScoreUser;
+import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,9 +53,9 @@ public class RegisterUserHandler extends BaseModel {
             //                resultObject.setMessage("avatar is empty");
             //            } 
             else {
-                Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
+                Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
                 if (!op.isPresent()) {
-                    ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0);
+                    ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0, System.currentTimeMillis());
                     LeaderBoard.INSTANCE.insert(scoreUser);
                     LOGGER.info(scoreUser);
                 } else {
@@ -89,4 +89,5 @@ public class RegisterUserHandler extends BaseModel {
 //
 //        baseRequest.setHandled(true);
 //    }
+
 }

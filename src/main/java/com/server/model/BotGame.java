@@ -70,7 +70,7 @@ public class BotGame {
                     jo.addProperty("round", (Double) m.get("round"));
 
                     currentRound = (Double) m.get("round");
-                    int delay = (1120 + (int) ((currentRound + 1) / 5) * (currentRound > 20 ? 150 : 100) + Utils._randomColor.nextInt(200));
+                    int delay = (1120 + (int) ((currentRound + 5) / 5) * (currentRound > 10 ? 150 : 200) + Utils._randomColor.nextInt(200));
                     LOGGER.error("deplay:" + delay);
 
                     new java.util.Timer().schedule(

@@ -9,9 +9,9 @@ package com.server.handler;
  *
  * @author namhcn
  */
-import com.server.entity.LeaderBoard;
-import com.server.entity.LeaderBoard.ScoreUser;
+import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
 import java.io.PrintWriter;

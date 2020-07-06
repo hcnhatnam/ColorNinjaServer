@@ -7,6 +7,7 @@ package com.colorninja.entity;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -24,16 +25,21 @@ public class Utils {
     static {
         for (int i = 1; i <= 5 * 20; i += 5) {
             int size = i / 5 + 2;
-            for (int j = 0; j < 5; j++) {
-                if (size < 7) {
-                    MAX_POINT_IN_ROUND.add(size);
-                }
-                else if (i >= 20 && i <= 40) {
-                    MAX_POINT_IN_ROUND.add(6);
 
-                } else {
-                    MAX_POINT_IN_ROUND.add(7);
-                }
+            MAX_POINT_IN_ROUND.addAll(new ArrayList<Integer>(Collections.nCopies(5, size)));
+
+
+            for (int j = 0; j < 5; j++) {
+
+//                if (size < 7) {
+//                    MAX_POINT_IN_ROUND.add(size);
+//                }
+//                else if (i >= 20 && i <= 40) {
+//                    MAX_POINT_IN_ROUND.add(6);
+//
+//                } else {
+//                    MAX_POINT_IN_ROUND.add(7);
+//                }
             }
         }
     }

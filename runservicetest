@@ -1,0 +1,4 @@
+echo "===============runservice===================" $(ps aux|grep -a "ColorNinjaServer-1.0-SNAPSHOT"|grep -a "Dappname=testcolorninja"|grep -a -v "com.Server.HServer"|grep -a -v "color=auto"|awk '{print $2}')
+kill -9 $(ps aux|grep -a "ColorNinjaServer-1.0-SNAPSHOT"|grep -a "Dappname=testcolorninja"|grep -a -v "com.Server.HServer"|grep -a -v "color=auto"|awk '{print $2}')
+echo "===============runservice2===================" "$(pwd)"
+java -cp  /root/test/ColorNinjaServer/target/ColorNinjaServer-1.0-SNAPSHOT-jar-with-dependencies.jar com.colorninja.server.SocketGameServer -Dappname=testcolorninja -Dport=9090 &

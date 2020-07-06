@@ -16,7 +16,8 @@ import com.colorninja.buissiness.output.OutNewBoardPacket.PREVIOUS_STATE;
 import com.colorninja.buissiness.output.OutWinGamePacket;
 import com.colorninja.buissiness.output.OutWinGamePacket.ScorePlayer;
 import com.colorninja.server.SocketGameServer;
-import com.server.entity.LeaderBoard;
+import com.database.LeaderBoard;
+import com.server.entity.ScoreUser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,19 +127,21 @@ public class InGame {
 
     public void winGameAnSaveScore(Map<String, SocketPlayer> mSo) {
         try {
-
+            for (SocketPlayer value : mSo.values()) {
+                value.setStatus(SocketPlayer.STATUS.WAITING);
+            }
             OutWinGamePacket winPacket = genOutputWinGame(mSo);
             for (ScorePlayer socketPlayer : winPacket.getScorePlayers()) {
-                Optional<LeaderBoard.ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(socketPlayer.getKeyPlayer());
-                LeaderBoard.ScoreUser scoreUser = null;
+                Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(socketPlayer.getKeyPlayer());
+                ScoreUser scoreUser = null;
                 if (socketPlayer.getScore() == winPacket.getWinnerscore()) {
                     if (op.isPresent()) {
                         scoreUser = op.get();
                         scoreUser.setNumWinGame(scoreUser.getNumWinGame() + 1);
                     } else {
                         SocketPlayer player = mSo.get(socketPlayer.getKeyPlayer());
-                        scoreUser = new LeaderBoard.ScoreUser(player.getKey(),
-                                player.getUserName(), 0, 1, 0);
+                        scoreUser = new ScoreUser(player.getKey(),
+                                player.getUserName(), "", 0, 1, 0, System.currentTimeMillis());
                     }
                 } else {
                     if (op.isPresent()) {
@@ -146,12 +149,12 @@ public class InGame {
                         scoreUser.setNumLooseGame(scoreUser.getNumWinGame() + 1);
                     } else {
                         SocketPlayer player = mSo.get(socketPlayer.getKeyPlayer());
-                        scoreUser = new LeaderBoard.ScoreUser(player.getKey(),
-                                player.getUserName(), 0, 0, 1);
+                        scoreUser = new ScoreUser(player.getKey(),
+                                player.getUserName(), "", 0, 0, 1, System.currentTimeMillis());
                     }
                 }
 
-                LeaderBoard.INSTANCE.Update(scoreUser);
+                LeaderBoard.INSTANCE.update(scoreUser);
             }
             IOSocket.broadcast(mSo.values(), winPacket);
 
@@ -175,7 +178,6 @@ public class InGame {
                 }
                 ScorePlayer scorePlayer = new ScorePlayer(key, sk.getScore());
                 scorePlayers.add(scorePlayer);
-                System.err.println(entry.getKey() + "ddddddddddd");
             }
             OutWinGamePacket winPacket = new OutWinGamePacket(winnerKey, maxScore, scorePlayers);
             return winPacket;

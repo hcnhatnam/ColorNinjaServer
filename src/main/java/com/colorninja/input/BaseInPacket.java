@@ -21,7 +21,7 @@ import lombok.Setter;
 public class BaseInPacket implements Serializable {
 
     public enum EInType {
-        UNKKNOW, WIN, CLOSE, GET_KEY, LOOSE, STOP_ROUND, GET_KEY_GROUP_MODE;
+        UNKKNOW, WIN, CLOSE, GET_KEY, LOOSE, STOP_ROUND, GET_KEY_GROUP_MODE, RE_MATCH, RE_MATCH_START_GAME;
     }
 
     public static EInType get(String input) {
@@ -39,6 +39,10 @@ public class BaseInPacket implements Serializable {
             return EInType.CLOSE;
         } else if (type.equals("stop_round")) {
             return EInType.STOP_ROUND;
+        } else if (type.equals("re_match")) {
+            return EInType.RE_MATCH;
+        } else if (type.equals("re_match_start_game")) {
+            return EInType.RE_MATCH_START_GAME;
         }
         return EInType.UNKKNOW;
     }
@@ -65,6 +69,12 @@ public class BaseInPacket implements Serializable {
             case GET_KEY_GROUP_MODE:
                 typeTmp = 7;
                 break;
+            case RE_MATCH:
+                typeTmp = 8;
+                break;
+            case RE_MATCH_START_GAME:
+                typeTmp = 9;
+                break;
             case UNKKNOW:
                 typeTmp = -1;
                 break;
@@ -86,6 +96,10 @@ public class BaseInPacket implements Serializable {
                 return EInType.STOP_ROUND;
             case 7:
                 return EInType.GET_KEY_GROUP_MODE;
+            case 8:
+                return EInType.RE_MATCH;
+            case 9:
+                return EInType.RE_MATCH_START_GAME;
             default:
                 return EInType.UNKKNOW;
         }

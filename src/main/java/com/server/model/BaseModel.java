@@ -21,6 +21,11 @@ public class BaseModel extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(BaseModel.class);
 
     public void returnJSon(HttpServletResponse resp, String content) {
+//        resp.addHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+//        resp.addHeader("Access-Control-Allow-Credentials", "true");
+//        resp.addHeader("Access-Control-Allow-Methods", "POST, GET,PUT, DELETE, HEAD, OPTIONS");
+//        resp.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,x-token,X-Custom-Header");
+
         PrintWriter out = null;
         try {
             resp.setContentType("application/json;charset=UTF-8");
@@ -40,6 +45,11 @@ public class BaseModel extends HttpServlet {
 
     public void returnJSon(HttpServletRequest req, HttpServletResponse resp, String content) {
         LOGGER.info(req.getRequestURI() + "_" + content);
+//        resp.addHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+//        resp.addHeader("Access-Control-Allow-Credentials", "true");
+//        resp.addHeader("Access-Control-Allow-Methods", "POST, GET,PUT, DELETE, HEAD, OPTIONS");
+//        resp.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,x-token,X-Custom-Header");
+
         PrintWriter out = null;
         try {
             resp.setContentType("application/json;charset=UTF-8");

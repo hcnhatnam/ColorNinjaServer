@@ -10,9 +10,9 @@ package com.server.handler;
  * @author namhcn
  */
 import com.server.entity.HReqParam;
-import com.server.entity.LeaderBoard;
-import com.server.entity.LeaderBoard.ScoreUser;
+import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class UserHandler extends BaseModel {
             } catch (Exception e) {
             }
 
-            Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
+            Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
             if (op.isPresent()) {
                 ScoreUser scoreUser = op.get();
                 resultObject.putData("user", scoreUser);
@@ -88,7 +88,7 @@ public class UserHandler extends BaseModel {
                 resultObject.setError(ResultObject.ERROR);
                 resultObject.setMessage("key is Empty");
             } else {
-                Optional<ScoreUser> op = LeaderBoard.INSTANCE.getUserScore(key);
+                Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
                 if (op.isPresent()) {
                     ScoreUser scoreUser = op.get();
                     boolean isUpdate = false;
@@ -128,7 +128,7 @@ public class UserHandler extends BaseModel {
                         }
                     }
                     if (isUpdate) {
-                        LeaderBoard.INSTANCE.Update(scoreUser);
+                        LeaderBoard.INSTANCE.update(scoreUser);
                     }
                     LOGGER.info(scoreUser);
                 } else {
