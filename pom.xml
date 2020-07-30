@@ -9,7 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <my.custom.work.dir>/home/namhcn/Documents/study/ColorNinjaServerGoogle</my.custom.work.dir>
+        <my.custom.work.dir>${basedir}</my.custom.work.dir>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
