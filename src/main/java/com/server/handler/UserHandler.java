@@ -12,6 +12,7 @@ package com.server.handler;
 import com.server.entity.HReqParam;
 import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ResultObjectInstance;
 import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
@@ -35,43 +36,47 @@ public class UserHandler extends BaseModel {
             String key = HReqParam.getString(req, "key");
             String type = "";
             try {
-                type = HReqParam.getString(req, "type");
-            } catch (Exception e) {
-            }
+                try {
+                    type = HReqParam.getString(req, "type");
 
-            Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
-            if (op.isPresent()) {
-                ScoreUser scoreUser = op.get();
-                resultObject.putData("user", scoreUser);
-                int rank = 1;
-                List<ScoreUser> allUsers = new ArrayList<>();
-                if (type.equals("solo")) {
-                    allUsers = LeaderBoard.INSTANCE.getLeaderBoardSolo();
-                } else {
-                    allUsers = LeaderBoard.INSTANCE.getLeaderBoard();
+                } catch (Exception e) {
                 }
-                for (ScoreUser user : allUsers) {
-                    if (user.getKey().equals(key)) {
-                        break;
+                Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
+                if (op.isPresent()) {
+                    ScoreUser scoreUser = op.get();
+                    resultObject.putData("user", scoreUser);
+                    int rank = 1;
+                    List<ScoreUser> allUsers = new ArrayList<>();
+                    if (type.equals("solo")) {
+                        allUsers = LeaderBoard.INSTANCE.getLeaderBoardSolo();
                     } else {
-                        rank++;
+                        allUsers = LeaderBoard.INSTANCE.getLeaderBoard();
                     }
+                    for (ScoreUser user : allUsers) {
+                        if (user.getKey().equals(key)) {
+                            break;
+                        } else {
+                            rank++;
+                        }
+                    }
+                    List<ScoreUser> preUsers = allUsers.subList(0, rank > 10 ? 10 : rank);
+                    List<ScoreUser> lastUsers = allUsers.subList(rank, rank + 10 > allUsers.size() ? allUsers.size() : rank + 10);
+
+                    resultObject.putData("rank", rank);
+                    resultObject.putData("preusers", preUsers);
+                    resultObject.putData("lastusers", lastUsers);
+
+                } else {
+                    resultObject = ResultObjectInstance.USER_NOT_EXSISTED;
                 }
-                List<ScoreUser> preUsers = allUsers.subList(0, rank > 10 ? 10 : rank);
-                List<ScoreUser> lastUsers = allUsers.subList(rank, rank + 10 > allUsers.size() ? allUsers.size() : rank + 10);
-
-                resultObject.putData("rank", rank);
-                resultObject.putData("preusers", preUsers);
-                resultObject.putData("lastusers", lastUsers);
-
-            } else {
-                resultObject.setError(ResultObject.ERROR);
-                resultObject.setMessage("User not Found !!!");
+            } catch (Exception ex) {
+                LOGGER.error(ex.getMessage(), ex);
+                resultObject = ResultObjectInstance.MISSING_PARAM;
             }
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            resultObject.setError(ResultObject.ERROR);
-            resultObject.setMessage(ex.getMessage());
+            resultObject = ResultObjectInstance.EXCEPTION;
         }
 
         returnJSon(resp, resultObject.toString());

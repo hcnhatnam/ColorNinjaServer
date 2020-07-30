@@ -1,0 +1,73 @@
+version: '3.7'
+
+services:
+
+  elasticsearch:
+    hostname: elasticsearch
+    container_name: elasticsearch
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536  
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      cluster.name: "elastic-node"
+      network.host: "0.0.0.0"
+      discovery.type: single-node
+
+  kibana:
+    hostname: kibana
+    container_name: kibana
+    restart: always
+    image: docker.elastic.co/kibana/kibana:7.8.0
+    ports:
+      - "5601:5601"
+    environment:
+      elasticsearch.url: "elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+  
+  logstash:
+    hostname: logstash
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:7.8.0
+    ports:
+      - "5044:5044"
+    volumes:
+      - sbrest_data:/logs
+      - $PWD/elk-logstash/logstash.conf:/conf/logstash.conf
+    command: logstash -f /conf/logstash.conf
+    depends_on:
+      -  elasticsearch
+
+  sbrest:
+    hostname: sbrest
+    container_name: sbrest
+    build:
+      context: .
+      dockerfile: ./java-sbrest/Dockerfile
+
+    labels:
+      filebeat_enable: sbrest
+    volumes:
+      - sbrest_data:/logs
+    ports:
+      - "8081:8080"
+    depends_on:
+      - elasticsearch    
+
+volumes:
+  elasticsearch_data:
+  filebeat_data:
+  sbrest_data:  

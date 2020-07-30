@@ -11,10 +11,10 @@ package com.server.handler;
  */
 import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ResultObjectInstance;
 import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,27 +34,9 @@ public class LeaderBoardBestScoreHandler extends BaseModel {
             resultObject.putData("scoreusers", scoreUsers);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            resultObject.setError(ResultObject.ERROR);
-            resultObject.setMessage(ex.getMessage());
+            resultObject = ResultObjectInstance.EXCEPTION;
         }
         returnJSon(resp, resultObject.toString());
     }
-//    @Override
-//    public void get(String target,
-//            Request baseRequest,
-//            HttpServletRequest request,
-//            HttpServletResponse response) throws IOException,
-//            ServletException {
-//        response.setContentType("text/html; charset=utf-8");
-//        response.setStatus(HttpServletResponse.SC_OK);
-//
-//        PrintWriter out = response.getWriter();
-//
-//        out.println("<h1>" + greeting + "</h1>");
-//        if (body != null) {
-//            out.println(body);
-//        }
-//
-//        baseRequest.setHandled(true);
-//    }
+
 }

@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 /**
@@ -131,9 +130,9 @@ public class BotGame {
         }
     }
 
-    public static void main(String[] args) {
-
-        System.err.println(11 / 10);
+    public static void main(String[] args) throws Exception {
+        BotGame client = new BotGame("127.0.0.1", names.get(Utils._randomColor.nextInt(names.size() - 1)));
+        client.run();
     }
 //    public static void main(String[] args) throws Exception {
 //        SocketGameClient client = new SocketGameClient("127.0.0.1", "BotNam" + Utils._randomColor.nextInt(4000));

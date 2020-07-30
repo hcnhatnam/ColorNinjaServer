@@ -1,0 +1,172 @@
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":-1,"message":"error key"}
+xxxwating:
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+The chat server is running...8080
+scheduleWithFixedDelayCheck: 1595037767101
+java.lang.Throwable: Test
+	at com.colorninja.server.SocketGameServer.lambda$main$0(SocketGameServer.java:431)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+info.scheduleWithFixedDelayCheck: 1595037767106
+scheduleWithFixedDelayCheck: 1595037767607
+java.lang.Throwable: Test
+	at com.colorninja.server.SocketGameServer.lambda$main$0(SocketGameServer.java:431)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+info.scheduleWithFixedDelayCheck: 1595037767608
+scheduleWithFixedDelayCheck: 1595037768108
+java.lang.Throwable: Test
+	at com.colorninja.server.SocketGameServer.lambda$main$0(SocketGameServer.java:431)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+info.scheduleWithFixedDelayCheck: 1595037768110
+scheduleWithFixedDelayCheck: 1595037768610
+java.lang.Throwable: Test
+	at com.colorninja.server.SocketGameServer.lambda$main$0(SocketGameServer.java:431)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+info.scheduleWithFixedDelayCheck: 1595037768611
+scheduleWithFixedDelayCheck: 1595037769112
+java.lang.Throwable: Test
+	at com.colorninja.server.SocketGameServer.lambda$main$0(SocketGameServer.java:431)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:308)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+info.scheduleWithFixedDelayCheck: 1595037769113
+Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='ian', source='cool_db', password=<hidden>, mechanismProperties=<hidden>}
+com.mongodb.MongoSecurityException: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='ian', source='cool_db', password=<hidden>, mechanismProperties=<hidden>}
+	at com.mongodb.internal.connection.SaslAuthenticator.wrapException(SaslAuthenticator.java:173)
+	at com.mongodb.internal.connection.SaslAuthenticator.access$300(SaslAuthenticator.java:40)
+	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:70)
+	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:47)
+	at com.mongodb.internal.connection.SaslAuthenticator.doAsSubject(SaslAuthenticator.java:179)
+	at com.mongodb.internal.connection.SaslAuthenticator.authenticate(SaslAuthenticator.java:47)
+	at com.mongodb.internal.connection.InternalStreamConnectionInitializer.authenticateAll(InternalStreamConnectionInitializer.java:156)
+	at com.mongodb.internal.connection.InternalStreamConnectionInitializer.initialize(InternalStreamConnectionInitializer.java:63)
+	at com.mongodb.internal.connection.InternalStreamConnection.open(InternalStreamConnection.java:129)
+	at com.mongodb.internal.connection.UsageTrackingInternalConnection.open(UsageTrackingInternalConnection.java:50)
+	at com.mongodb.internal.connection.DefaultConnectionPool$PooledConnection.open(DefaultConnectionPool.java:398)
+	at com.mongodb.internal.connection.DefaultConnectionPool.get(DefaultConnectionPool.java:115)
+	at com.mongodb.internal.connection.DefaultConnectionPool.get(DefaultConnectionPool.java:101)
+	at com.mongodb.internal.connection.DefaultServer.getConnection(DefaultServer.java:92)
+	at com.mongodb.binding.ClusterBinding$ClusterBindingConnectionSource.getConnection(ClusterBinding.java:126)
+	at com.mongodb.operation.FindOperation$1.call(FindOperation.java:728)
+	at com.mongodb.operation.FindOperation$1.call(FindOperation.java:725)
+	at com.mongodb.operation.OperationHelper.withReadConnectionSource(OperationHelper.java:463)
+	at com.mongodb.operation.FindOperation.execute(FindOperation.java:725)
+	at com.mongodb.operation.FindOperation.execute(FindOperation.java:89)
+	at com.mongodb.client.internal.MongoClientDelegate$DelegateOperationExecutor.execute(MongoClientDelegate.java:189)
+	at com.mongodb.client.internal.MongoIterableImpl.execute(MongoIterableImpl.java:143)
+	at com.mongodb.client.internal.MongoIterableImpl.iterator(MongoIterableImpl.java:92)
+	at com.database.BaseDB.get(BaseDB.java:39)
+	at com.database.LeaderBoard.getLeaderBoardSolo(LeaderBoard.java:26)
+	at com.server.handler.LeaderBoardHandler.main(LeaderBoardHandler.java:46)
+Caused by: com.mongodb.MongoCommandException: Command failed with error 18 (AuthenticationFailed): 'Authentication failed.' on server 35.198.220.200:27017. The full response is {"ok": 0.0, "errmsg": "Authentication failed.", "code": 18, "codeName": "AuthenticationFailed"}
+	at com.mongodb.internal.connection.ProtocolHelper.getCommandFailureException(ProtocolHelper.java:175)
+	at com.mongodb.internal.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:303)
+	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:259)
+	at com.mongodb.internal.connection.CommandHelper.sendAndReceive(CommandHelper.java:83)
+	at com.mongodb.internal.connection.CommandHelper.executeCommand(CommandHelper.java:33)
+	at com.mongodb.internal.connection.SaslAuthenticator.sendSaslStart(SaslAuthenticator.java:130)
+	at com.mongodb.internal.connection.SaslAuthenticator.access$100(SaslAuthenticator.java:40)
+	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:54)
+	... 23 more
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":-1,"message":"error key"}
+xxxwating:
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+xxxrecive:{"idGroup":"1595041800395","key_usernames":{"MongHoang":"MongHoang","NamHoang":"NamHoang"},"key_avatars":{},"type":6,"message":""}
+xxxwating:
+xxxrecive:{"boardGame":{"round":1,"color":4,"sizeBoard":2,"index":2,"secondColor":1},"isPreviousWinner":true,"type":5,"message":""}
+deplay:1506
+xxxwating:
+xxxrecive:{"idGroup":"1595041800880","key_usernames":{"QuyNguyen":"QuyNguyen","MongHoang":"MongHoang"},"key_avatars":{},"type":6,"message":""}
+xxxwating:
+xxxrecive:{"boardGame":{"round":1,"color":15,"sizeBoard":2,"index":3,"secondColor":2},"isPreviousWinner":true,"type":5,"message":""}
+deplay:1437
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxrecive:{"idGroup":"1595041801384","key_usernames":{"LapHoang":"LapHoang","MongHoang":"MongHoang"},"key_avatars":{},"type":6,"message":""}
+xxxwating:
+xxxrecive:{"boardGame":{"round":1,"color":10,"sizeBoard":2,"index":3,"secondColor":0},"isPreviousWinner":true,"type":5,"message":""}
+deplay:1427
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxSendWin:{"type":0,"round":1.0}
+xxxSendWin:{"type":0,"round":1.0}
+xxxSendWin:{"type":0,"round":1.0}
+xxxrecive:{"type":2,"message":"require key"}
+xxxwating:
+xxxrecive:{"type":1,"message":"wating next player"}
+xxxwating:
+xxxrecive:{"idGroup":"1595042079976","key_usernames":{"MongHoang":"MongHoang","LinhDuc":"LinhDuc"},"key_avatars":{},"type":6,"message":""}
+xxxwating:
+xxxrecive:{"boardGame":{"round":1,"color":15,"sizeBoard":2,"index":3,"secondColor":0},"isPreviousWinner":true,"type":5,"message":""}
+deplay:1357
+xxxwating:
+xxxrecive:{"idGroup":"1595042080478","key_usernames":{"NamHoang":"NamHoang","LinhDuc":"LinhDuc"},"key_avatars":{},"type":6,"message":""}
+xxxwating:
+xxxrecive:{"boardGame":{"round":1,"color":12,"sizeBoard":2,"index":2,"secondColor":1},"isPreviousWinner":true,"type":5,"message":""}
+deplay:1321
+xxxwating:
+xxxrecive:{"type":-11,"message":"competiter disconected"}
+xxxwating:
+xxxSendWin:{"type":0,"round":1.0}
+xxxrecive:{"boardGame":{"round":2,"color":0,"sizeBoard":2,"index":0,"secondColor":2},"isPreviousWinner":false,"type":5,"message":""}
+deplay:1513
+xxxwating:
+xxxSendWin:{"type":0,"round":1.0}
+xxxSendWin:{"type":0,"round":2.0}

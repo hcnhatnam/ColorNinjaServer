@@ -12,6 +12,7 @@ package com.server.handler;
 import com.colorninja.entity.EventGame;
 import com.database.EventGameDB;
 import com.server.entity.ResultObject;
+import com.server.entity.ResultObjectInstance;
 import com.server.model.BaseModel;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,27 +23,24 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 public class EventGameHandler extends BaseModel {
-    
+
     private static final Logger LOGGER = Logger.getLogger(EventGameHandler.class);
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ResultObject resultObject = new ResultObject(0, "");
-        
         try {
-            
             List<EventGame> eventGames = EventGameDB.INSTANCE.get();
             if (eventGames == null && !eventGames.isEmpty()) {
                 eventGames = new ArrayList<>();
             }
             resultObject.putData("eventgames", eventGames);
-            
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            resultObject.setError(ResultObject.ERROR);
-            resultObject.setMessage(ex.getMessage());
+            resultObject = ResultObjectInstance.EXCEPTION;
         }
         returnJSon(resp, resultObject.toString());
     }
-    
+
 }

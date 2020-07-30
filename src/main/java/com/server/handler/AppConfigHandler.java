@@ -7,11 +7,10 @@ package com.server.handler;
 
 import com.colorninja.entity.ColorRGB;
 import com.server.entity.ResultObject;
+import com.server.entity.ResultObjectInstance;
 import com.server.model.BaseModel;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
@@ -25,6 +24,7 @@ public class AppConfigHandler extends BaseModel {
     private static final Logger LOGGER = Logger.getLogger(EventGameHandler.class);
     public static final List<ColorRGB> colorRGB = new ArrayList<>();
     public static final ColorRGB homeBackgroundColor;
+    public static final boolean isEnableAdvertisement;
 
     static {
         ColorRGB colorRGB1 = new ColorRGB(8, 170, 145);
@@ -66,20 +66,20 @@ public class AppConfigHandler extends BaseModel {
         colorRGB.add(colorRGB18);
 
         homeBackgroundColor = new ColorRGB(44, 44, 44);
+        isEnableAdvertisement = true;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         ResultObject resultObject = new ResultObject(0, "");
-
         try {
             resultObject.putData("listColors", colorRGB);
             resultObject.putData("homeBackgroundColor", homeBackgroundColor);
+            resultObject.putData("isEnableAdvertisement", isEnableAdvertisement);
 
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            resultObject.setError(ResultObject.ERROR);
-            resultObject.setMessage(ex.getMessage());
+            resultObject = ResultObjectInstance.EXCEPTION;
         }
         returnJSon(resp, resultObject.toString());
 

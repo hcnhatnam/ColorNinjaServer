@@ -6,6 +6,7 @@
 package com.Server;
 
 import com.server.handler.AppConfigHandler;
+import com.server.handler.BackupFile;
 import com.server.handler.EventGameHandler;
 import com.server.handler.LeaderBoardBestScoreHandler;
 import com.server.handler.LeaderBoardHandler;
@@ -42,6 +43,7 @@ public class HServer {
         context.addServlet(EventGameHandler.class, "/eventgame");
         context.addServlet(AppConfigHandler.class, "/appconfig");
         context.addServlet(UploadServlet.class, "/upload");
+        context.addServlet(BackupFile.class, "/backup");
         context.addFilter(PermissionFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
         ResourceHandler resourceHandler = new ResourceHandler();

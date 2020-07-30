@@ -38,20 +38,20 @@ import java.util.logging.Level;
 import org.apache.log4j.Logger;
 
 public class SocketGameServer {
-    
+
     private static final Logger LOGGER = Logger.getLogger(SocketGameServer.class);
-    
+
     private static final List<SocketPlayer> availablePlayer = Collections.synchronizedList(new ArrayList<>());
     private static final Map<String, List<SocketPlayer>> availablePlayerGroupMode = new ConcurrentHashMap<>();
-    
+
     public static final Map<String, GroupScoketPlayer> groupScoketPlayers = new ConcurrentHashMap<>();
     private static final Map<String, String> keyPlayer_GroupId = new ConcurrentHashMap<>();
-    
+
     private static class Handler implements Runnable {
-        
+
         private Socket socket;
         SocketPlayer socketPlayer;
-        
+
         public Handler(Socket socket) {
             this.socket = socket;
             try {
@@ -60,11 +60,11 @@ public class SocketGameServer {
                 LOGGER.error(ex.getMessage(), ex);
             }
         }
-        
+
         enum ErrorKeyPlayer {
             EXISTED, INVALID, VALID
         }
-        
+
         ErrorKeyPlayer isValidKeyPlayer(KeyPlayerPacket keyPlayerPacket) {
             try {
                 LOGGER.info("isValidKeyPlayer:" + keyPlayerPacket);
@@ -72,14 +72,14 @@ public class SocketGameServer {
                 if (key == null || key.isEmpty()) {
                     return ErrorKeyPlayer.INVALID;
                 }
-                
+
                 return isExistPlayer(key) ? ErrorKeyPlayer.EXISTED : ErrorKeyPlayer.VALID;
             } catch (Exception ex) {
                 LOGGER.error(ex.getMessage(), ex);
             }
             return ErrorKeyPlayer.INVALID;
         }
-        
+
         public boolean isExistPlayer(String key) {
             try {
                 for (Map.Entry<String, GroupScoketPlayer> entry : groupScoketPlayers.entrySet()) {
@@ -101,21 +101,21 @@ public class SocketGameServer {
             }
             return false;
         }
-        
+
         public void startGame(String groupId, List<SocketPlayer> socketPlayerInGroup) {
             try {
-                
+
                 GroupScoketPlayer groupScoketPlayer = new GroupScoketPlayer(groupId, socketPlayerInGroup);
                 groupScoketPlayers.put(groupId, groupScoketPlayer);
                 Map<String, String> key_usernames = new HashMap<>();
-                
+
                 for (SocketPlayer player : socketPlayerInGroup) {
                     LOGGER.error("--------------" + player.getUserName());
                     player.setScore(0);
                     key_usernames.put(player.getKey(), player.getUserName());
                     keyPlayer_GroupId.put(player.getKey(), groupId);
                 }
-                
+
                 OutBoardInfoPacket outBoardInfoPacket = new OutBoardInfoPacket(groupId, key_usernames);
                 IOSocket.broadcast(groupScoketPlayer.getSocketPlayers().values(), outBoardInfoPacket);
                 Map<OutNewBoardPacket.PREVIOUS_STATE, OutNewBoardPacket> mOut = OutNewBoardPacket.getInstances(1);
@@ -124,10 +124,10 @@ public class SocketGameServer {
                 LOGGER.error(ex.getMessage(), ex);
             }
         }
-        
+
         public boolean processKeyInputAndIsContinue(PrintWriter out, KeyPlayerPacket keyPlayerPacket) {
             try {
-                
+
                 ErrorKeyPlayer errorKeyPlayer = isValidKeyPlayer(keyPlayerPacket);
                 LOGGER.info("processKeyInputAndIsContinue:" + errorKeyPlayer);
                 if (null != errorKeyPlayer) {
@@ -149,7 +149,7 @@ public class SocketGameServer {
             }
             return false;
         }
-        
+
         @Override
         public void run() {
             LOGGER.info("=====Start-Connect=====");
@@ -158,7 +158,7 @@ public class SocketGameServer {
             try {
                 out = new PrintWriter(socket.getOutputStream(), true);
                 in = new Scanner(socket.getInputStream());
-                
+
                 while (true) {
                     IOSocket.send(out, BaseOutPacketInstance.REQUIRE_KEY);
                     Optional<BaseInPacket> opKequireKey = IOSocket.reciver(in);
@@ -176,7 +176,7 @@ public class SocketGameServer {
                                     socketPlayers.add(socketPlayer);
                                     startGame(keyGroup, socketPlayers);
                                     availablePlayer.remove(0);
-                                    
+
                                 } else {
                                     availablePlayer.add(socketPlayer);
                                     IOSocket.send(socketPlayer, BaseOutPacketInstance.WAITING_PLAYER);
@@ -184,18 +184,18 @@ public class SocketGameServer {
                                 break;
                             }
                             return;
-                            
+
                         } else if (baseInPacket.getEType() == BaseInPacket.EInType.GET_KEY_GROUP_MODE) {
                             try {
-                                
+
                                 KeyPlayerGroupModePacket keyPlayerPacket = (KeyPlayerGroupModePacket) baseInPacket;
                                 LOGGER.error("keyPlayerPacket" + keyPlayerPacket);
                                 if (processKeyInputAndIsContinue(out, keyPlayerPacket)) {
-                                    
+
                                     socketPlayer = new SocketPlayer(keyPlayerPacket.getKeyPlayer(), keyPlayerPacket.getUsername(), out, in, 0, socket);
                                     String groupId = keyPlayerPacket.getGroupId();
                                     LOGGER.info("groupId" + groupId);
-                                    
+
                                     if (groupId != null && !groupId.isEmpty()) {
                                         List<SocketPlayer> playerInGroup = availablePlayerGroupMode.get(keyPlayerPacket.getGroupId());
                                         if (playerInGroup == null) {
@@ -205,20 +205,20 @@ public class SocketGameServer {
                                         playerInGroup.add(socketPlayer);
                                         startGame(groupId, playerInGroup);
                                         availablePlayerGroupMode.remove(keyPlayerPacket.getGroupId());
-                                        
+
                                     } else {
                                         String idGroup = "0";
                                         do {
                                             idGroup = Utils.getRandom(100) + "";
                                         } while (groupScoketPlayers.get(idGroup) != null);
                                         groupScoketPlayers.put(idGroup, new GroupScoketPlayer(idGroup, socketPlayer));
-                                        
+
                                         List<SocketPlayer> socketPlayers = new ArrayList<>();
                                         socketPlayers.add(socketPlayer);
                                         availablePlayerGroupMode.put(idGroup, socketPlayers);
                                         IOSocket.send(socketPlayer, new WaitingPlayerGroupModePacket(idGroup));
                                     }
-                                    
+
                                     break;
                                 }
                             } catch (Exception ex) {
@@ -240,7 +240,7 @@ public class SocketGameServer {
                             Thread.sleep(1000);
                             LOGGER.error("out.checkError():" + out.checkError() + "test:" + socket.isOutputShutdown() + ",test:" + socket.isInputShutdown() + "test:" + socket.getKeepAlive());
                         }
-                        
+
                     }
                     Optional<BaseInPacket> opBsPacket = IOSocket.reciver(socketPlayer.getIn());
                     String keyPlayer = socketPlayer.getKey();
@@ -284,17 +284,17 @@ public class SocketGameServer {
                             return;
                         }
                     }
-                    
+
                 }
             } catch (Exception ex) {
                 LOGGER.error(ex.getMessage(), ex);
             } finally {
                 closeConect(in, out, socket, socketPlayer);
             }
-            
+
         }
     }
-    
+
     public static void removeConnectPlayer(String key) {
         try {
             String groupId = null;
@@ -308,7 +308,7 @@ public class SocketGameServer {
                         break;
                     }
                 }
-                
+
                 if (groupId != null) {
                     availablePlayerGroupMode.remove(groupId);
                     for (Map.Entry<String, SocketPlayer> en : groupScoketPlayer.getSocketPlayers().entrySet()) {
@@ -319,7 +319,7 @@ public class SocketGameServer {
                         keyPlayer_GroupId.remove(en.getKey());
                     }
                     break;
-                    
+
                 }
             }
             LOGGER.error("isClosed" + groupId + ":" + availablePlayerGroupMode.keySet());
@@ -334,11 +334,11 @@ public class SocketGameServer {
                             break;
                         }
                     }
-                    
+
                 }
             }
             LOGGER.error("isClosed" + groupId + ":" + availablePlayerGroupMode.keySet());
-            
+
             if (groupId == null) {
                 for (SocketPlayer socketPlayer : availablePlayer) {
                     if (socketPlayer.getKey().equals(key)) {
@@ -346,12 +346,12 @@ public class SocketGameServer {
                     }
                 }
             }
-            
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
     }
-    
+
     public static void closeConect(Scanner in, PrintWriter out, Socket socket, SocketPlayer socketPlayer) {
         try {
             if (in != null) {
@@ -364,16 +364,16 @@ public class SocketGameServer {
                 socket.close();
             }
             removeConnectPlayer(socketPlayer.getKey());
-            
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
         LOGGER.info("availablePlayer" + availablePlayer.toString());
-        
+
         LOGGER.info("Close connect of User: " + socketPlayer.getKey());
-        
+
     }
-    
+
     public static void closeConect(SocketPlayer socketPlayer) {
         try {
             if (socketPlayer.getIn() != null) {
@@ -386,16 +386,16 @@ public class SocketGameServer {
                 socketPlayer.getSocket().close();
             }
             removeConnectPlayer(socketPlayer.getKey());
-            
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
         LOGGER.info("availablePlayer" + availablePlayer.toString());
-        
+
         LOGGER.info("Close connect of User: " + socketPlayer.getKey());
-        
+
     }
-    
+
     public static void checkDisconectAndRemove(Collection<SocketPlayer> listPlayer) {
         for (SocketPlayer socketPlayer : listPlayer) {
             if (socketPlayer.getKey().equals("59318598-0F46-48B5-A278-F1FD31E29755")) {
@@ -413,21 +413,24 @@ public class SocketGameServer {
             }
         }
     }
-    public static ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
+    public static ScheduledExecutorService ses = Executors.newScheduledThreadPool(100);
     public static ScheduledExecutorService CLEAR_DISCONNECT = Executors.newScheduledThreadPool(2);
-    
+
     public static void main(String[] args) throws IOException {
         String appName = args[0].split("=")[1];
         String port = args[1].split("=")[1];
-        
+
         ses.scheduleWithFixedDelay(() -> {
             if (!availablePlayer.isEmpty()) {
                 LOGGER.error(availablePlayer.get(0).getUserName());
                 long waitTime = System.currentTimeMillis() - availablePlayer.get(0).getCreatedTime();
-                if (waitTime > 3000) {
+                if (waitTime > 2000) {
                     BotGame.startBoot();
                 }
             }
+//            LOGGER.error("scheduleWithFixedDelayCheck: " + System.currentTimeMillis(),new Throwable("Test"));
+//            LOGGER.info("info.scheduleWithFixedDelayCheck: " + System.currentTimeMillis());
+
         }, 2, 500, TimeUnit.MILLISECONDS);
         CLEAR_DISCONNECT.scheduleWithFixedDelay(() -> {
             checkDisconectAndRemove(availablePlayer);
@@ -444,17 +447,17 @@ public class SocketGameServer {
                 String key = entry.getKey();
                 GroupScoketPlayer value = entry.getValue();
                 checkDisconectAndRemove(value.getSocketPlayers().values());
-                
+
             }
         }, 5, 100, TimeUnit.MILLISECONDS);
         LOGGER.info("The chat server is running..." + port);
         ExecutorService pool = Executors.newFixedThreadPool(20);
         try (ServerSocket listener = new ServerSocket(Integer.parseInt(port))) {
-            
+
             while (true) {
                 pool.execute(new Handler(listener.accept()));
             }
         }
     }
-    
+
 }

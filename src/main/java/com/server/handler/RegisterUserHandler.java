@@ -9,15 +9,13 @@ package com.server.handler;
  *
  * @author namhcn
  */
-import com.colorninja.entity.Utils;
 import com.server.entity.HReqParam;
 import com.database.LeaderBoard;
 import com.server.entity.ResultObject;
+import com.server.entity.ResultObjectInstance;
 import com.server.entity.ScoreUser;
 import com.server.model.BaseModel;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,61 +31,32 @@ public class RegisterUserHandler extends BaseModel {
         ResultObject resultObject = new ResultObject(0, "");
 
         try {
-            String key = "";
-            String username = "";
-            String avatar = "";
             try {
-                key = HReqParam.getString(req, "key");
-                username = HReqParam.getString(req, "username");
-                avatar = HReqParam.getString(req, "avatar");
-            } catch (Exception e) {
-            }
-            if (key.isEmpty()) {
-                resultObject.setError(ResultObject.ERROR);
-                resultObject.setMessage("key is empty");
-            } else if (username.isEmpty()) {
-                resultObject.setError(ResultObject.ERROR);
-                resultObject.setMessage("username is empty");
-            } //            else if (avatar.isEmpty()) {
-            //                resultObject.setError(ResultObject.ERROR);
-            //                resultObject.setMessage("avatar is empty");
-            //            } 
-            else {
-                Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
-                if (!op.isPresent()) {
-                    ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0, System.currentTimeMillis());
-                    LeaderBoard.INSTANCE.insert(scoreUser);
-                    LOGGER.info(scoreUser);
+                String key = HReqParam.getString(req, "key");
+                String username = HReqParam.getString(req, "username");
+                String avatar = HReqParam.getString(req, "avatar");
+                if (key.isEmpty() || username.isEmpty()) {
+                    resultObject = ResultObjectInstance.MISSING_PARAM;
                 } else {
-                    resultObject.setError(ResultObject.ERROR);
-                    resultObject.setMessage("user existed");
+                    Optional<ScoreUser> op = LeaderBoard.INSTANCE.get(key);
+                    if (!op.isPresent()) {
+                        ScoreUser scoreUser = new ScoreUser(key, username, avatar, 0, 0, 0, System.currentTimeMillis());
+                        LeaderBoard.INSTANCE.insert(scoreUser);
+                        LOGGER.info(scoreUser);
+                    } else {
+                        resultObject = ResultObjectInstance.USER_EXSISTED;
+                    }
                 }
+            } catch (Exception ex) {
+                LOGGER.error(ex.getMessage(), ex);
+                resultObject = ResultObjectInstance.MISSING_PARAM;
             }
+
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
-            resultObject.setError(ResultObject.ERROR);
-            resultObject.setMessage(ex.getMessage());
+            resultObject = ResultObjectInstance.EXCEPTION;
         }
 
         returnJSon(resp, resultObject.toString());
     }
-//    @Override
-//    public void get(String target,
-//            Request baseRequest,
-//            HttpServletRequest request,
-//            HttpServletResponse response) throws IOException,
-//            ServletException {
-//        response.setContentType("text/html; charset=utf-8");
-//        response.setStatus(HttpServletResponse.SC_OK);
-//
-//        PrintWriter out = response.getWriter();
-//
-//        out.println("<h1>" + greeting + "</h1>");
-//        if (body != null) {
-//            out.println(body);
-//        }
-//
-//        baseRequest.setHandled(true);
-//    }
-
 }
