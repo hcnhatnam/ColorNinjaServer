@@ -11,18 +11,13 @@ on:
 
 jobs:
   build_:
-
     runs-on: ubuntu-latest
-
     steps:
-      - run: mkdir test/ & touch test/abc.txt
-      - name: ssh deploy
-        uses: easingthemes/ssh-deploy@v2.1.4
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: ""
-          SOURCE: "test/"
-          REMOTE_HOST: 35.198.220.200
-          REMOTE_USER: doleduy
-          TARGET: /home/doleduy/TestGit
-
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        name: id_rsa # optional
+        known_hosts: 35.198.220.200
+    - name: rsync over ssh
+      run: rsync . doleduy@35.198.220.200:/home/doleduy/TestGit
