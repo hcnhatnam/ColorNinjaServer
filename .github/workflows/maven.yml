@@ -10,5 +10,6 @@ jobs:
       env:
         USERNAME: doleyduy
         HOST: 35.198.220.200
-        SCRIPT: mkdir /home/doleduy/TestGit/ok
+        SCRIPT:  |
+            ls -l
         KEY: ${{ secrets.SERVER_SSH_KEY }}
