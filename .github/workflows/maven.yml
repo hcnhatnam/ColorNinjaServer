@@ -33,3 +33,10 @@ jobs:
         with:
           name: Package
           path: staging
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: 35.198.220.200
+          username: doleduy
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: whoami
