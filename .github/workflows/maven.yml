@@ -33,7 +33,7 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.1.4
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-Dappname=colorninja -Dport=8081"
+          ARGS: ""
           SOURCE: "target/"
           REMOTE_HOST: 35.198.220.200
           REMOTE_USER: doleduy
