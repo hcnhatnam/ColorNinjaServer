@@ -28,13 +28,14 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - run: mkdir staging && cp target/*.jar staging & echo ${{ secrets.REMOTE_HOST }} ${{ secrets.REMOTE_USER }} ${{ secrets.REMOTE_TARGET }}
+      - run: mkdir staging && cp target/*.jar staging & ls & pwd
       - name: ssh deploy
         uses: easingthemes/ssh-deploy@v2.1.4
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-Dappname=colorninja -Dport=8080"
-          SOURCE: " /home/runner/work/ColorNinjaServer/ColorNinjaServer/"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
+          ARGS: "-Dappname=colorninja -Dport=8081"
+          SOURCE: "target/"
+          REMOTE_HOST: 35.198.220.200
+          REMOTE_USER: doleduy
+          TARGET: /home/doleduy/TestGit
+
