@@ -44,8 +44,8 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SOURCE: "dist/"
+          SOURCE: "target/"
           REMOTE_HOST:  35.198.220.200
           REMOTE_USER: doleduy
-          TARGET: /home/doleduy/GitTest
+          TARGET: /home/doleduy/TestGit/
           
