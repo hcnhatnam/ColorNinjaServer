@@ -10,7 +10,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build_:
 
     runs-on: ubuntu-latest
 
@@ -33,3 +33,12 @@ jobs:
         with:
           name: Package
           path: staging
+      - name: ssh deploy
+        uses: easingthemes/ssh-deploy@v2.1.4
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-Dappname=colorninja -Dport=8080"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
