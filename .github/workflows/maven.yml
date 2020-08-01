@@ -40,12 +40,13 @@ jobs:
           username: doleduy
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: whoami
-      - name: Deploy to Staging server
-        uses: easingthemes/ssh-deploy@v2.0.7
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          SOURCE: "target/"
-          REMOTE_HOST:  35.198.220.200
-          REMOTE_USER: doleduy
-          TARGET: "/home/doleduy/TestGit/"
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: . 
+          remote_path: /home/doleduy/TestGit/
+          remote_host: 35.198.220.200
+          remote_user: doleduy
+          remote_key: ${{ secrets.SERVER_SSH_KEY }}
       
