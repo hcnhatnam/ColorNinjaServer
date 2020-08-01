@@ -12,14 +12,11 @@ import com.colorninja.buissiness.output.BaseOutPacket;
 import com.colorninja.input.InGamePacket;
 import com.colorninja.input.KeyPlayerGroupModePacket;
 import com.colorninja.input.KeyPlayerPacket;
-import com.colorninja.buissiness.output.WaitingPlayerGroupModePacket;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
-import javafx.util.Pair;
 import org.apache.log4j.Logger;
 
 /**

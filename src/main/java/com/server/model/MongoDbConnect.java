@@ -29,7 +29,9 @@ public class MongoDbConnect {
 
     private MongoDbConnect() {
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
-        String connectionStr = "mongodb://HoangNam02011997:HoangCongNhatNam19970201@35.198.220.200:27017/?authSource=cool_db";
+//        String connectionStr = "mongodb://HoangNam02011997:HoangCongNhatNam19970201@35.198.220.200:27017/?authSource=cool_db";
+        String connectionStr = "mongodb://HoangNam02011997:HoangCongNhatNam19970201@localhost:27017/?authSource=cool_db";
+
         ConnectionString connectionString = new ConnectionString(connectionStr);
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
         CodecRegistry codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
