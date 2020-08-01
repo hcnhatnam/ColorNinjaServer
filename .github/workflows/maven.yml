@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn clean compile assembly:single
       - run: mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v2
         with:
@@ -48,4 +48,4 @@ jobs:
           host: 35.198.220.200
           username: doleduy
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: cd /home/doleduy/Git/ && ./ColorNinjaServerGoogle/runservice
+          script: cd /home/doleduy/Git/ColorNinjaServerGoogle && mvn clean compile assembly:single  && cd .. && ./ColorNinjaServerGoogle/runservice
