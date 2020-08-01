@@ -48,4 +48,4 @@ jobs:
           host: 35.198.220.200
           username: doleduy
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: cd /home/doleduy/Git/ColorNinjaServerGoogle && mvn clean compile assembly:single  && ../ColorNinjaServerGoogle/runservice
+          script: cd /home/doleduy/Git/ColorNinjaServerGoogle && mvn clean compile assembly:single  && cd .. && ./ColorNinjaServerGoogle/runservice
