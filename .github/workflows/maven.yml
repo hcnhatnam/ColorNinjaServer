@@ -33,20 +33,19 @@ jobs:
         with:
           name: Package
           path: staging
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@4.1
+        with:
+          switches: -avzr --delete
+          path: . 
+          remote_path: /home/doleduy/Git/ColorNinjaServerGoogle
+          remote_host: 35.198.220.200
+          remote_user: doleduy
+          remote_key: ${{ secrets.SERVER_SSH_KEY }}
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
           host: 35.198.220.200
           username: doleduy
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: whoami
-      - name: rsync deployments
-        uses: burnett01/rsync-deployments@4.1
-        with:
-          switches: -avzr --delete
-          path: . 
-          remote_path: /home/doleduy/TestGit/
-          remote_host: 35.198.220.200
-          remote_user: doleduy
-          remote_key: ${{ secrets.SERVER_SSH_KEY }}
-      
+          script: cd /home/doleduy/Git/ && ./ColorNinjaServerGoogle/runservice
