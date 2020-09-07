@@ -29,10 +29,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean compile assembly:single
       - run: mkdir staging && cp target/*.jar staging
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Package
-          path: staging
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: Package
+#           path: staging
       - name: rsync deployments
         uses: burnett01/rsync-deployments@4.1
         with:
@@ -48,4 +48,4 @@ jobs:
           host: 35.198.220.200
           username: doleduy
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: cd /home/doleduy/Git/ColorNinjaServerGoogle && mvn clean compile assembly:single  && cd .. && ./ColorNinjaServerGoogle/runservice
+          script: cd /home/doleduy/Git/ColorNinjaServerGoogle && mvn clean compile assembly:single  && cd .. &&./ColorNinjaServerGoogle/runservice &
